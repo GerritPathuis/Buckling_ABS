@@ -20,3 +20,14 @@ C:\Repos\VTK-Buckling_ABS\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_
 C:\Repos\VTK-Buckling_ABS\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.exe
 C:\Repos\VTK-Buckling_ABS\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.xml
 C:\Repos\VTK-Buckling_ABS\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.pdb
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\bin\Debug\Buckling_1.exe.config
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\bin\Debug\Buckling_1.exe
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\bin\Debug\Buckling_1.pdb
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\bin\Debug\Buckling_1.xml
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.vbprojResolveAssemblyReference.cache
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.Form1.resources
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.Resources.resources
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.vbproj.GenerateResource.Cache
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.exe
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.xml
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.pdb
