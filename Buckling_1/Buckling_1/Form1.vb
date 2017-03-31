@@ -29,6 +29,8 @@ Public Class Form1
     Public _σbx, _σby As Double     'Uniforn in-plane bending
     Public _q As Double             'Uniform lateral load [N/cm2]
     Public _τ As Double             'Edge shear stress
+    Public _k As Double             'Ratio of edge stresses
+    Public _α As Double             'aspect ratio
 
     '------- dimensions --------
     Public _t As Double         'Plate thickness [mm]
@@ -44,6 +46,8 @@ Public Class Form1
         _L = NumericUpDown1.Value   'Length
         _S = NumericUpDown2.Value   'stiffener distance
         _t = NumericUpDown3.Value   'plate thicknes
+
+        _α = _L / _S                 'aspect ratio
     End Sub
     Private Sub Read_loads()
         _q = NumericUpDown6.Value   'Uniform lateral load [N/cm2]
@@ -55,8 +59,11 @@ Public Class Form1
 
         _τ = NumericUpDown7.Value   'Edge shear stress
 
-        _σxmax = NumericUpDown11.Value  'maximum compressive stress in longitudinal direction
-        _σymax = NumericUpDown10.Value  'maximum compressive stress in transverse direction
+        _σxmax = _σax + _σbx 'maximum compressive stress in longitudinal direction
+        _σymax = _σay + _σby 'maximum compressive stress in transverse direction
+
+        TextBox5.Text = Round(_σxmax, 0).ToString
+        TextBox6.Text = Round(_σymax, 0).ToString
     End Sub
     Private Sub Read_properties()
         _σ0 = NumericUpDown14.Value
@@ -65,13 +72,38 @@ Public Class Form1
         _v = NumericUpDown12.Value
         _Pr = NumericUpDown16.Value
     End Sub
+    'See page 29
+    Private Sub Calc_chaper3_1_2()
+        Dim σCi, σEi, Ks As Double
+
+        _k = 1    'Ratio of edge stresses see page 29
+
+        Ks = 1
+
+
+
+        σEi = 1
+
+
+        If (σEi < _Pr * _σ0) Then
+            σCi = 1
+        Else
+            σCi = 1
+        End If
+
+
+
+        'TextBox1.Text = Round(τE, 0).ToString
+        'TextBox2.Text = Round(_τC, 0).ToString
+        'TextBox3.Text = Round(Ks, 0).ToString
+        'TextBox4.Text = Round(_τ0, 0).ToString
+    End Sub
 
     'See page 28
     Private Sub Calc_chaper3_1_1()
         Dim Ks, τE, C1 As Double
 
         C1 = 1.0    'For plate panels
-
         Ks = (4.0 * (_S / _L) ^ 2 + 5.34) * C1
 
         τE = Ks * PI ^ 2 * _E / (12 * (1 - _v ^ 2))
@@ -98,9 +130,12 @@ Public Class Form1
         Label112.BackColor = IIf(strength_criterium <= 1, Color.Green, Color.Red)
     End Sub
 
-
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
         Calc_sequence()
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click, NumericUpDown9.Enter, NumericUpDown8.Enter, NumericUpDown7.Enter, NumericUpDown6.Enter, NumericUpDown5.Enter, NumericUpDown4.Enter, NumericUpDown9.ValueChanged, NumericUpDown8.ValueChanged, NumericUpDown7.ValueChanged, NumericUpDown6.ValueChanged, NumericUpDown5.ValueChanged, NumericUpDown4.ValueChanged
+        Read_loads()
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click, GroupBox1.Enter
