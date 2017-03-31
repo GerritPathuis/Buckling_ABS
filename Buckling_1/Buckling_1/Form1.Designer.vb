@@ -136,16 +136,12 @@ Partial Class Form1
         Me.Label80 = New System.Windows.Forms.Label()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.Label36 = New System.Windows.Forms.Label()
-        Me.NumericUpDown18 = New System.Windows.Forms.NumericUpDown()
-        Me.NumericUpDown19 = New System.Windows.Forms.NumericUpDown()
         Me.Label37 = New System.Windows.Forms.Label()
         Me.Label38 = New System.Windows.Forms.Label()
         Me.Label29 = New System.Windows.Forms.Label()
         Me.Label30 = New System.Windows.Forms.Label()
         Me.Label31 = New System.Windows.Forms.Label()
-        Me.NumericUpDown15 = New System.Windows.Forms.NumericUpDown()
         Me.NumericUpDown16 = New System.Windows.Forms.NumericUpDown()
-        Me.NumericUpDown17 = New System.Windows.Forms.NumericUpDown()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.Label33 = New System.Windows.Forms.Label()
         Me.Label34 = New System.Windows.Forms.Label()
@@ -191,6 +187,10 @@ Partial Class Form1
         Me.Label63 = New System.Windows.Forms.Label()
         Me.Label64 = New System.Windows.Forms.Label()
         Me.Label65 = New System.Windows.Forms.Label()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.TextBox2 = New System.Windows.Forms.TextBox()
+        Me.TextBox3 = New System.Windows.Forms.TextBox()
+        Me.TextBox4 = New System.Windows.Forms.TextBox()
         Me.GroupBox1.SuspendLayout()
         CType(Me.NumericUpDown3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -225,11 +225,7 @@ Partial Class Form1
         CType(Me.NumericUpDown23, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown24, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox4.SuspendLayout()
-        CType(Me.NumericUpDown18, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.NumericUpDown19, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.NumericUpDown15, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown16, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.NumericUpDown17, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage5.SuspendLayout()
         Me.GroupBox9.SuspendLayout()
         CType(Me.NumericUpDown37, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -1410,6 +1406,10 @@ Partial Class Form1
         '
         'GroupBox4
         '
+        Me.GroupBox4.Controls.Add(Me.TextBox4)
+        Me.GroupBox4.Controls.Add(Me.TextBox3)
+        Me.GroupBox4.Controls.Add(Me.TextBox2)
+        Me.GroupBox4.Controls.Add(Me.TextBox1)
         Me.GroupBox4.Controls.Add(Me.Label72)
         Me.GroupBox4.Controls.Add(Me.Label75)
         Me.GroupBox4.Controls.Add(Me.Label78)
@@ -1417,16 +1417,12 @@ Partial Class Form1
         Me.GroupBox4.Controls.Add(Me.Label80)
         Me.GroupBox4.Controls.Add(Me.Label35)
         Me.GroupBox4.Controls.Add(Me.Label36)
-        Me.GroupBox4.Controls.Add(Me.NumericUpDown18)
-        Me.GroupBox4.Controls.Add(Me.NumericUpDown19)
         Me.GroupBox4.Controls.Add(Me.Label37)
         Me.GroupBox4.Controls.Add(Me.Label38)
         Me.GroupBox4.Controls.Add(Me.Label29)
         Me.GroupBox4.Controls.Add(Me.Label30)
         Me.GroupBox4.Controls.Add(Me.Label31)
-        Me.GroupBox4.Controls.Add(Me.NumericUpDown15)
         Me.GroupBox4.Controls.Add(Me.NumericUpDown16)
-        Me.GroupBox4.Controls.Add(Me.NumericUpDown17)
         Me.GroupBox4.Controls.Add(Me.Label32)
         Me.GroupBox4.Controls.Add(Me.Label33)
         Me.GroupBox4.Controls.Add(Me.Label34)
@@ -1508,26 +1504,6 @@ Partial Class Form1
         Me.Label36.TabIndex = 13
         Me.Label36.Text = "τE"
         '
-        'NumericUpDown18
-        '
-        Me.NumericUpDown18.Location = New System.Drawing.Point(459, 125)
-        Me.NumericUpDown18.Maximum = New Decimal(New Integer() {6000, 0, 0, 0})
-        Me.NumericUpDown18.Name = "NumericUpDown18"
-        Me.NumericUpDown18.Size = New System.Drawing.Size(78, 20)
-        Me.NumericUpDown18.TabIndex = 12
-        Me.NumericUpDown18.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        Me.NumericUpDown18.Value = New Decimal(New Integer() {4250, 0, 0, 0})
-        '
-        'NumericUpDown19
-        '
-        Me.NumericUpDown19.Location = New System.Drawing.Point(459, 99)
-        Me.NumericUpDown19.Maximum = New Decimal(New Integer() {100000000, 0, 0, 0})
-        Me.NumericUpDown19.Name = "NumericUpDown19"
-        Me.NumericUpDown19.Size = New System.Drawing.Size(78, 20)
-        Me.NumericUpDown19.TabIndex = 11
-        Me.NumericUpDown19.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        Me.NumericUpDown19.Value = New Decimal(New Integer() {4250, 0, 0, 0})
-        '
         'Label37
         '
         Me.Label37.AutoSize = True
@@ -1578,21 +1554,10 @@ Partial Class Form1
         Me.Label31.TabIndex = 6
         Me.Label31.Text = "τ0"
         '
-        'NumericUpDown15
-        '
-        Me.NumericUpDown15.DecimalPlaces = 1
-        Me.NumericUpDown15.Location = New System.Drawing.Point(459, 73)
-        Me.NumericUpDown15.Maximum = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.NumericUpDown15.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.NumericUpDown15.Name = "NumericUpDown15"
-        Me.NumericUpDown15.Size = New System.Drawing.Size(78, 20)
-        Me.NumericUpDown15.TabIndex = 5
-        Me.NumericUpDown15.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        Me.NumericUpDown15.Value = New Decimal(New Integer() {555, 0, 0, 131072})
-        '
         'NumericUpDown16
         '
         Me.NumericUpDown16.DecimalPlaces = 1
+        Me.NumericUpDown16.Enabled = False
         Me.NumericUpDown16.Increment = New Decimal(New Integer() {1, 0, 0, 65536})
         Me.NumericUpDown16.Location = New System.Drawing.Point(459, 47)
         Me.NumericUpDown16.Maximum = New Decimal(New Integer() {1, 0, 0, 0})
@@ -1603,25 +1568,15 @@ Partial Class Form1
         Me.NumericUpDown16.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.NumericUpDown16.Value = New Decimal(New Integer() {6, 0, 0, 65536})
         '
-        'NumericUpDown17
-        '
-        Me.NumericUpDown17.Location = New System.Drawing.Point(459, 21)
-        Me.NumericUpDown17.Maximum = New Decimal(New Integer() {200000, 0, 0, 0})
-        Me.NumericUpDown17.Name = "NumericUpDown17"
-        Me.NumericUpDown17.Size = New System.Drawing.Size(78, 20)
-        Me.NumericUpDown17.TabIndex = 3
-        Me.NumericUpDown17.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        Me.NumericUpDown17.Value = New Decimal(New Integer() {18000, 0, 0, 0})
-        '
         'Label32
         '
         Me.Label32.AutoSize = True
         Me.Label32.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label32.Location = New System.Drawing.Point(6, 68)
         Me.Label32.Name = "Label32"
-        Me.Label32.Size = New System.Drawing.Size(184, 16)
+        Me.Label32.Size = New System.Drawing.Size(187, 16)
         Me.Label32.TabIndex = 2
-        Me.Label32.Text = "Boundary dependentconstant"
+        Me.Label32.Text = "Boundary dependent constant"
         '
         'Label33
         '
@@ -2103,6 +2058,38 @@ Partial Class Form1
         Me.Label65.TabIndex = 0
         Me.Label65.Text = "Slenderness"
         '
+        'TextBox1
+        '
+        Me.TextBox1.Location = New System.Drawing.Point(459, 99)
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.Size = New System.Drawing.Size(77, 20)
+        Me.TextBox1.TabIndex = 20
+        Me.TextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'TextBox2
+        '
+        Me.TextBox2.Location = New System.Drawing.Point(459, 122)
+        Me.TextBox2.Name = "TextBox2"
+        Me.TextBox2.Size = New System.Drawing.Size(77, 20)
+        Me.TextBox2.TabIndex = 21
+        Me.TextBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'TextBox3
+        '
+        Me.TextBox3.Location = New System.Drawing.Point(459, 73)
+        Me.TextBox3.Name = "TextBox3"
+        Me.TextBox3.Size = New System.Drawing.Size(77, 20)
+        Me.TextBox3.TabIndex = 22
+        Me.TextBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'TextBox4
+        '
+        Me.TextBox4.Location = New System.Drawing.Point(460, 22)
+        Me.TextBox4.Name = "TextBox4"
+        Me.TextBox4.Size = New System.Drawing.Size(77, 20)
+        Me.TextBox4.TabIndex = 23
+        Me.TextBox4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2153,11 +2140,7 @@ Partial Class Form1
         CType(Me.NumericUpDown24, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox4.ResumeLayout(False)
         Me.GroupBox4.PerformLayout()
-        CType(Me.NumericUpDown18, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.NumericUpDown19, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.NumericUpDown15, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.NumericUpDown16, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.NumericUpDown17, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage5.ResumeLayout(False)
         Me.GroupBox9.ResumeLayout(False)
         Me.GroupBox9.PerformLayout()
@@ -2259,16 +2242,12 @@ Partial Class Form1
     Friend WithEvents GroupBox4 As GroupBox
     Friend WithEvents Label35 As Label
     Friend WithEvents Label36 As Label
-    Friend WithEvents NumericUpDown18 As NumericUpDown
-    Friend WithEvents NumericUpDown19 As NumericUpDown
     Friend WithEvents Label37 As Label
     Friend WithEvents Label38 As Label
     Friend WithEvents Label29 As Label
     Friend WithEvents Label30 As Label
     Friend WithEvents Label31 As Label
-    Friend WithEvents NumericUpDown15 As NumericUpDown
     Friend WithEvents NumericUpDown16 As NumericUpDown
-    Friend WithEvents NumericUpDown17 As NumericUpDown
     Friend WithEvents Label32 As Label
     Friend WithEvents Label33 As Label
     Friend WithEvents Label34 As Label
@@ -2346,4 +2325,8 @@ Partial Class Form1
     Friend WithEvents Label110 As Label
     Friend WithEvents Label111 As Label
     Friend WithEvents Label112 As Label
+    Friend WithEvents TextBox2 As TextBox
+    Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents TextBox3 As TextBox
+    Friend WithEvents TextBox4 As TextBox
 End Class

@@ -18,9 +18,10 @@ Public Class Form1
     Public _τ0 As Double        'shear strength plate
     Public _E As Double         'Elasticity
     Public _v As Double         'Poissons ratio
+    Public _Pr As Double        'Proportional lineair elastic limit for structure
 
     '-------- shear stress -------
-    Public _τC As Double        'Edge shear stress
+    Public _τC As Double        'Edge shear critical stress
     Public _η As Double = 1     'max length utilizing factor
 
     '------- loads--------
@@ -62,6 +63,30 @@ Public Class Form1
         _τ0 = _σ0 / Sqrt(3)
         _E = NumericUpDown13.Value
         _v = NumericUpDown12.Value
+        _Pr = NumericUpDown16.Value
+    End Sub
+
+    'See page 28
+    Private Sub Calc_chaper3_1_1()
+        Dim Ks, τE, C1 As Double
+
+        C1 = 1.0    'For plate panels
+
+        Ks = (4.0 * (_S / _L) ^ 2 + 5.34) * C1
+
+        τE = Ks * PI ^ 2 * _E / (12 * (1 - _v ^ 2))
+        τE *= (_t / _S) ^ 2
+
+        If (τE < _Pr * _τ0) Then
+            _τC = τE
+        Else
+            _τC = _τ0 * (1 - _Pr * (1 - _Pr) * _τ0 / τE)
+        End If
+
+        TextBox1.Text = Round(τE, 0).ToString
+        TextBox2.Text = Round(_τC, 0).ToString
+        TextBox3.Text = Round(Ks, 0).ToString
+        TextBox4.Text = Round(_τ0, 0).ToString
     End Sub
 
     'See page 27
@@ -72,6 +97,7 @@ Public Class Form1
         Label112.Text = IIf(strength_criterium <= 1, "Plate buckling state limit  OK", "Plate buckling state limit NOK")
         Label112.BackColor = IIf(strength_criterium <= 1, Color.Green, Color.Red)
     End Sub
+
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
         Calc_sequence()
@@ -85,6 +111,7 @@ Public Class Form1
         Read_dimensions()
         Read_properties()
         Read_loads()
+        Calc_chaper3_1_1()
         Calc_chaper3_1()
     End Sub
 
