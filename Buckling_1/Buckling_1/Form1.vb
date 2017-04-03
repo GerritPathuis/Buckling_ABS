@@ -10,6 +10,10 @@ Public Class Form1
     Public _Ψ As Double = 1     'Adjustment factor (psi)
     Public _σxmax As Double     'maximum compressive stress in longitudinal direction
     Public _σymax As Double     'maximum compressive stress in transverse direction
+
+    Public _σxmin As Double     'mimimum compressive stress in longitudinal direction
+    Public _σymin As Double     'minimum compressive stress in transverse direction
+
     Public _σCx As Double       'maximum compressive stress in longitudinal direction
     Public _σCy As Double       'maximum compressive stress in transverse direction
 
@@ -29,7 +33,8 @@ Public Class Form1
     Public _σbx, _σby As Double     'Uniforn in-plane bending
     Public _q As Double             'Uniform lateral load [N/cm2]
     Public _τ As Double             'Edge shear stress
-    Public _k As Double             'Ratio of edge stresses
+    Public _kx As Double            'Ratio of edge stresses X direction
+    Public _ky As Double            'Ratio of edge stresses Y direction
     Public _α As Double             'aspect ratio
 
     '------- dimensions --------
@@ -62,8 +67,20 @@ Public Class Form1
         _σxmax = _σax + _σbx 'maximum compressive stress in longitudinal direction
         _σymax = _σay + _σby 'maximum compressive stress in transverse direction
 
+        _σxmin = _σax - _σbx 'minimum compressive stress in longitudinal direction
+        _σymin = _σay - _σby 'minimum compressive stress in transverse direction
+
+        _kx = _σxmin / _σxmax
+        _ky = _σymin / _σymax
+
         TextBox5.Text = Round(_σxmax, 0).ToString
         TextBox6.Text = Round(_σymax, 0).ToString
+
+        TextBox7.Text = Round(_σxmin, 0).ToString
+        TextBox8.Text = Round(_σymin, 0).ToString
+
+        TextBox9.Text = Round(_kx, 0).ToString
+        TextBox10.Text = Round(_ky, 0).ToString
     End Sub
     Private Sub Read_properties()
         _σ0 = NumericUpDown14.Value
@@ -76,7 +93,7 @@ Public Class Form1
     Private Sub Calc_chaper3_1_2()
         Dim σCi, σEi, Ks As Double
 
-        _k = 1    'Ratio of edge stresses see page 29
+        'Ratio of edge stresses see page 29
 
         Ks = 1
 
@@ -137,6 +154,7 @@ Public Class Form1
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click, NumericUpDown9.Enter, NumericUpDown8.Enter, NumericUpDown7.Enter, NumericUpDown6.Enter, NumericUpDown5.Enter, NumericUpDown4.Enter, NumericUpDown9.ValueChanged, NumericUpDown8.ValueChanged, NumericUpDown7.ValueChanged, NumericUpDown6.ValueChanged, NumericUpDown5.ValueChanged, NumericUpDown4.ValueChanged
         Read_loads()
     End Sub
+
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click, GroupBox1.Enter
         Calc_sequence()
