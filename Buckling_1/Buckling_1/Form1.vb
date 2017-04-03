@@ -53,6 +53,7 @@ Public Class Form1
         _t = NumericUpDown3.Value   'plate thicknes
 
         _α = _L / _S                 'aspect ratio
+        TextBox11.Text = Round(_α, 3).ToString
     End Sub
     Private Sub Read_loads()
         _q = NumericUpDown6.Value   'Uniform lateral load [N/cm2]
@@ -92,15 +93,35 @@ Public Class Form1
     'See page 29
     Private Sub Calc_chaper3_1_2()
         Dim σCi, σEi, Ks As Double
+        Dim C1 As Double = 1.0      'Niet af
+        Dim C2 As Double = 1.0      'Niet af
 
-        'Ratio of edge stresses see page 29
+        '==============Loading applied along short edge========================
+        If (_kx >= 0 And _kx <= 1) Then
+            Ks = C1 * 8.4 / (_kx + 1.1)
+        Else
+            Ks = C1 * (7.7 - 6.4 * _kx + 10 * _kx ^ 2)
+        End If
 
-        Ks = 1
+        '==============Loading applied along short edge========================
+        If (_kx < 1 / 3) Then
+            If (_α >= 1 And _α <= 2) Then
+                Ks = 24 / _α ^ 2
+                Ks += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 18 / _α ^ 2) * (1 + _kx)
+                Ks *= C2
+            Else
+                Ks = 12 / _α ^ 2
+                Ks += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 9 / _α ^ 2) * (1 + _kx)
+                Ks *= C2
+            End If
+        Else
+            Ks = (1 + 1 / _α ^ 2) ^ 2 * (1.675 - 0.675 * _kx)
+            Ks *= C2
+        End If
 
 
-
+        '==============Elastic buckling stress=============================
         σEi = 1
-
 
         If (σEi < _Pr * _σ0) Then
             σCi = 1
@@ -156,7 +177,8 @@ Public Class Form1
     End Sub
 
 
-    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click, GroupBox1.Enter
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click, GroupBox1.Enter, NumericUpDown3.Enter, NumericUpDown3.Click, NumericUpDown2.Enter, NumericUpDown2.Click, NumericUpDown1.Enter, NumericUpDown1.Click
+
         Calc_sequence()
     End Sub
 
