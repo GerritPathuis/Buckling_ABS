@@ -42,6 +42,8 @@ Public Class Form1
     Public _S As Double         'Stiffeners distance [mm]
     Public _L As Double         'stiffeners length [mm]
     Public _LG As Double        'girder length [mm]
+    Public _β As Double         'slenderness ratio [-]
+
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Calc_sequence()
@@ -92,12 +94,41 @@ Public Class Form1
         _v = NumericUpDown12.Value      'Poissons
         _Pr = NumericUpDown16.Value     'Proportional lineair elastic limit of structure
     End Sub
+    'See page 28
+    Private Sub Calc_chaper3_1_1()
+        Dim Ks, τE, C1 As Double
+
+        Select Case True
+            Case RadioButton1.Checked
+                C1 = 1.1
+            Case RadioButton2.Checked
+                C1 = 1.0
+            Case Else
+                C1 = 1.0
+        End Select
+
+        Ks = (4.0 * (_S / _L) ^ 2 + 5.34) * C1
+
+        τE = Ks * PI ^ 2 * _E / (12 * (1 - _v ^ 2))
+        τE *= (_t / _S) ^ 2
+
+        If (τE < _Pr * _τ0) Then
+            _τC = τE
+        Else
+            _τC = _τ0 * (1 - _Pr * (1 - _Pr) * _τ0 / τE)
+        End If
+
+        TextBox1.Text = Round(τE, 0).ToString
+        TextBox2.Text = Round(_τC, 0).ToString
+        TextBox3.Text = Round(Ks, 2).ToString
+        TextBox4.Text = Round(_τ0, 0).ToString
+    End Sub
     'See page 29
     Private Sub Calc_chaper3_1_2()
         Dim σCix, σEix As Double
         Dim σCiy, σEiy As Double
-        Dim Ksx_short, Ksx_long, ksx_bigger As Double
-        Dim Ksy_short, Ksy_long, ksy_bigger As Double
+        Dim Ksx_short, Ksx_long As Double
+        Dim Ksy_short, Ksy_long As Double
         Dim C1, C2 As Double
 
         Select Case True
@@ -177,7 +208,6 @@ Public Class Form1
         End If
 
         '==============Elastic buckling stress=============================
-
         σEiy = Ksy_short * (_t / _S) ^ 2 * (PI ^ 2 * _E) / (12 * (1 - _v ^ 2))
 
         '==============Critical buckling stress=============================
@@ -192,34 +222,18 @@ Public Class Form1
         TextBox15.Text = Round(σCiy, 0).ToString
     End Sub
 
-    'See page 28
-    Private Sub Calc_chaper3_1_1()
-        Dim Ks, τE, C1 As Double
+    'See page 30
+    Private Sub Calc_chaper3_3()
+        Dim _τu As Double
 
-        Select Case True
-            Case RadioButton1.Checked
-                C1 = 1.1
-            Case RadioButton2.Checked
-                C1 = 1.0
-            Case Else
-                C1 = 1.0
-        End Select
 
-        Ks = (4.0 * (_S / _L) ^ 2 + 5.34) * C1
+        _β = _S / _t * Sqrt(_σ0 / _E)   'Slenderness ratio
+        _η = 0.6                        'See page 2
+        _τu = _τC + 0.5 * (_σ0 - Sqrt(3 * _τC)) / (1 + _α + _α ^ 2) ^ 0.5
 
-        τE = Ks * PI ^ 2 * _E / (12 * (1 - _v ^ 2))
-        τE *= (_t / _S) ^ 2
 
-        If (τE < _Pr * _τ0) Then
-            _τC = τE
-        Else
-            _τC = _τ0 * (1 - _Pr * (1 - _Pr) * _τ0 / τE)
-        End If
-
-        TextBox1.Text = Round(τE, 0).ToString
-        TextBox2.Text = Round(_τC, 0).ToString
-        TextBox3.Text = Round(Ks, 2).ToString
-        TextBox4.Text = Round(_τ0, 0).ToString
+        TextBox12.Text = Round(_β, 2).ToString
+        TextBox19.Text = Round(_η, 2).ToString
     End Sub
 
     'See page 27
@@ -249,6 +263,7 @@ Public Class Form1
         Read_loads()
         Calc_chaper3_1_1()
         Calc_chaper3_1_2()
+        Calc_chaper3_3()
         Calc_chaper3_1()
     End Sub
 
