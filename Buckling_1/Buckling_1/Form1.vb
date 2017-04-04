@@ -80,68 +80,131 @@ Public Class Form1
         TextBox7.Text = Round(_σxmin, 0).ToString
         TextBox8.Text = Round(_σymin, 0).ToString
 
-        TextBox9.Text = Round(_kx, 0).ToString
-        TextBox10.Text = Round(_ky, 0).ToString
+        TextBox9.Text = Round(_kx, 1).ToString
+        TextBox20.Text = Round(_kx, 1).ToString
+        TextBox10.Text = Round(_ky, 1).ToString
+        TextBox21.Text = Round(_ky, 1).ToString
     End Sub
     Private Sub Read_properties()
         _σ0 = NumericUpDown14.Value
         _τ0 = _σ0 / Sqrt(3)
-        _E = NumericUpDown13.Value
-        _v = NumericUpDown12.Value
-        _Pr = NumericUpDown16.Value
+        _E = NumericUpDown13.Value      'Elasticity
+        _v = NumericUpDown12.Value      'Poissons
+        _Pr = NumericUpDown16.Value     'Proportional lineair elastic limit of structure
     End Sub
     'See page 29
     Private Sub Calc_chaper3_1_2()
-        Dim σCi, σEi, Ks As Double
-        Dim C1 As Double = 1.0      'Niet af
-        Dim C2 As Double = 1.0      'Niet af
+        Dim σCix, σEix As Double
+        Dim σCiy, σEiy As Double
+        Dim Ksx_short, Ksx_long, ksx_bigger As Double
+        Dim Ksy_short, Ksy_long, ksy_bigger As Double
+        Dim C1, C2 As Double
 
+        Select Case True
+            Case RadioButton1.Checked
+                C1 = 1.1
+                C2 = 1.2
+            Case RadioButton2.Checked
+                C1 = 1.0
+                C2 = 1.1
+            Case Else
+                C1 = 1.0
+                C2 = 1.0
+        End Select
+
+        '============== X DIRECTION============================================
         '==============Loading applied along short edge========================
         If (_kx >= 0 And _kx <= 1) Then
-            Ks = C1 * 8.4 / (_kx + 1.1)
+            Ksx_short = C1 * 8.4 / (_kx + 1.1)
         Else
-            Ks = C1 * (7.7 - 6.4 * _kx + 10 * _kx ^ 2)
+            Ksx_short = C1 * (7.6 - 6.4 * _kx + 10 * _kx ^ 2)
         End If
 
         '==============Loading applied along short edge========================
         If (_kx < 1 / 3) Then
             If (_α >= 1 And _α <= 2) Then
-                Ks = 24 / _α ^ 2
-                Ks += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 18 / _α ^ 2) * (1 + _kx)
-                Ks *= C2
+                Ksx_long = 24 / _α ^ 2
+                Ksx_long += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 18 / _α ^ 2) * (1 + _kx)
+                Ksx_long *= C2
             Else
-                Ks = 12 / _α ^ 2
-                Ks += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 9 / _α ^ 2) * (1 + _kx)
-                Ks *= C2
+                Ksx_long = 12 / _α ^ 2
+                Ksx_long += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 9 / _α ^ 2) * (1 + _kx)
+                Ksx_long *= C2
             End If
         Else
-            Ks = (1 + 1 / _α ^ 2) ^ 2 * (1.675 - 0.675 * _kx)
-            Ks *= C2
+            Ksx_long = (1 + 1 / _α ^ 2) ^ 2 * (1.675 - 0.675 * _kx)
+            Ksx_long *= C2
         End If
-
 
         '==============Elastic buckling stress=============================
-        σEi = 1
 
-        If (σEi < _Pr * _σ0) Then
-            σCi = 1
+        σEix = Ksx_long * (_t / _S) ^ 2 * (PI ^ 2 * _E) / (12 * (1 - _v ^ 2))
+
+        '==============Critical buckling stress=============================
+        If (σEix < _Pr * _σ0) Then
+            σCix = σEix
         Else
-            σCi = 1
+            σCix = _σ0 * (1 - _Pr * (1 - _Pr) * _σ0 / σEix)
         End If
 
 
+        TextBox18.Text = Round(Ksx_long, 2).ToString
+        TextBox13.Text = Round(σEix, 0).ToString
+        TextBox14.Text = Round(σCix, 0).ToString
 
-        'TextBox1.Text = Round(τE, 0).ToString
-        'TextBox2.Text = Round(_τC, 0).ToString
-        'TextBox3.Text = Round(Ks, 0).ToString
-        'TextBox4.Text = Round(_τ0, 0).ToString
+        '============== Y DIRECTION============================================
+        '==============Loading applied along short edge========================
+        If (_ky >= 0 And _ky <= 1) Then
+            Ksy_short = C1 * 8.4 / (_kx + 1.1)
+        Else
+            Ksy_short = C1 * (7.6 - 6.4 * _kx + 10 * _kx ^ 2)
+        End If
+
+        '==============Loading applied along short edge========================
+        If (_kx < 1 / 3) Then
+            If (_α >= 1 And _α <= 2) Then
+                Ksy_long = 24 / _α ^ 2
+                Ksy_long += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 18 / _α ^ 2) * (1 + _kx)
+                Ksy_long *= C2
+            Else
+                Ksy_long = 12 / _α ^ 2
+                Ksy_long += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 9 / _α ^ 2) * (1 + _kx)
+                Ksy_long *= C2
+            End If
+        Else
+            Ksy_long = (1 + 1 / _α ^ 2) ^ 2 * (1.675 - 0.675 * _kx)
+            Ksy_long *= C2
+        End If
+
+        '==============Elastic buckling stress=============================
+
+        σEiy = Ksy_short * (_t / _S) ^ 2 * (PI ^ 2 * _E) / (12 * (1 - _v ^ 2))
+
+        '==============Critical buckling stress=============================
+        If (σEiy < _Pr * _σ0) Then
+            σCiy = σEiy
+        Else
+            σCiy = _σ0 * (1 - _Pr * (1 - _Pr) * _σ0 / σEiy)
+        End If
+
+        TextBox17.Text = Round(Ksy_short, 2).ToString
+        TextBox16.Text = Round(σEiy, 0).ToString
+        TextBox15.Text = Round(σCiy, 0).ToString
     End Sub
 
     'See page 28
     Private Sub Calc_chaper3_1_1()
         Dim Ks, τE, C1 As Double
 
-        C1 = 1.0    'For plate panels
+        Select Case True
+            Case RadioButton1.Checked
+                C1 = 1.1
+            Case RadioButton2.Checked
+                C1 = 1.0
+            Case Else
+                C1 = 1.0
+        End Select
+
         Ks = (4.0 * (_S / _L) ^ 2 + 5.34) * C1
 
         τE = Ks * PI ^ 2 * _E / (12 * (1 - _v ^ 2))
@@ -155,7 +218,7 @@ Public Class Form1
 
         TextBox1.Text = Round(τE, 0).ToString
         TextBox2.Text = Round(_τC, 0).ToString
-        TextBox3.Text = Round(Ks, 0).ToString
+        TextBox3.Text = Round(Ks, 2).ToString
         TextBox4.Text = Round(_τ0, 0).ToString
     End Sub
 
@@ -168,7 +231,7 @@ Public Class Form1
         Label112.BackColor = IIf(strength_criterium <= 1, Color.Green, Color.Red)
     End Sub
 
-    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter, RadioButton3.CheckedChanged, RadioButton2.CheckedChanged, RadioButton1.CheckedChanged
         Calc_sequence()
     End Sub
 
@@ -176,9 +239,7 @@ Public Class Form1
         Read_loads()
     End Sub
 
-
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click, GroupBox1.Enter, NumericUpDown3.Enter, NumericUpDown3.Click, NumericUpDown2.Enter, NumericUpDown2.Click, NumericUpDown1.Enter, NumericUpDown1.Click
-
         Calc_sequence()
     End Sub
 
@@ -187,6 +248,7 @@ Public Class Form1
         Read_properties()
         Read_loads()
         Calc_chaper3_1_1()
+        Calc_chaper3_1_2()
         Calc_chaper3_1()
     End Sub
 
