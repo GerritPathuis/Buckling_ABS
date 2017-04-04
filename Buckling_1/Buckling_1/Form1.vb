@@ -224,16 +224,42 @@ Public Class Form1
 
     'See page 30
     Private Sub Calc_chaper3_3()
-        Dim _τu As Double
-
+        Dim τu, σux, σuy, Cy, Cx As Double
 
         _β = _S / _t * Sqrt(_σ0 / _E)   'Slenderness ratio
         _η = 0.6                        'See page 2
-        _τu = _τC + 0.5 * (_σ0 - Sqrt(3 * _τC)) / (1 + _α + _α ^ 2) ^ 0.5
 
+        'Utimate strength
+        τu = _τC + 0.5 * (_σ0 - Sqrt(3 * _τC)) / (1 + _α + _α ^ 2) ^ 0.5
+        If τu < _τC Then τu = _τC
+
+        '-------------- Cx-----------------
+        If _β > 1 Then
+            Cx = 2 / _β - (1 / _β ^ 2)
+        Else
+            Cx = 1
+        End If
+
+        '-------------- Cy-----------------
+        Cy = Cx * _S / _L + 0.1 * (1 - _S / _L) * (1 + 1 / _β ^ 2) ^ 2
+        If Cy > 1 Then Cy = 1
+
+        '-------- σux -------------
+        σux = Cx * _σ0
+        If σux < _σCx Then σux = _σCx
+
+        '-------- σuy -------------
+        σuy = Cy * _σ0
+        If σuy < _σCy Then σux = _σCy
 
         TextBox12.Text = Round(_β, 2).ToString
         TextBox19.Text = Round(_η, 2).ToString
+        TextBox22.Text = Round(_η, 2).ToString
+        TextBox23.Text = Round(Cx, 2).ToString
+        TextBox24.Text = Round(Cy, 2).ToString
+        TextBox25.Text = Round(τu, 0).ToString
+        TextBox26.Text = Round(σux, 0).ToString
+        TextBox27.Text = Round(σuy, 0).ToString
     End Sub
 
     'See page 27
@@ -245,7 +271,7 @@ Public Class Form1
         Label112.BackColor = IIf(strength_criterium <= 1, Color.Green, Color.Red)
     End Sub
 
-    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter, RadioButton3.CheckedChanged, RadioButton2.CheckedChanged, RadioButton1.CheckedChanged
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
         Calc_sequence()
     End Sub
 
