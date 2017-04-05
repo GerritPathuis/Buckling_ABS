@@ -252,6 +252,9 @@ Public Class Form1
         σuy = Cy * _σ0
         If σuy < _σCy Then σux = _σCy
 
+        '-------- φ (phi)-------------
+
+
         TextBox12.Text = Round(_β, 2).ToString
         TextBox19.Text = Round(_η, 2).ToString
         TextBox22.Text = Round(_η, 2).ToString
@@ -278,6 +281,7 @@ Public Class Form1
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click, NumericUpDown9.Enter, NumericUpDown8.Enter, NumericUpDown7.Enter, NumericUpDown6.Enter, NumericUpDown5.Enter, NumericUpDown4.Enter, NumericUpDown9.ValueChanged, NumericUpDown8.ValueChanged, NumericUpDown7.ValueChanged, NumericUpDown6.ValueChanged, NumericUpDown5.ValueChanged, NumericUpDown4.ValueChanged
         Read_loads()
     End Sub
+
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click, GroupBox1.Enter, NumericUpDown3.Enter, NumericUpDown3.Click, NumericUpDown2.Enter, NumericUpDown2.Click, NumericUpDown1.Enter, NumericUpDown1.Click
         Calc_sequence()
