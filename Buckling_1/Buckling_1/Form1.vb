@@ -32,6 +32,7 @@ Public Class Form1
     Public _σax, _σay As Double     'Uniforn in-plane compression
     Public _σbx, _σby As Double     'Uniforn in-plane bending
     Public _q As Double             'Uniform lateral load [N/cm2]
+    Public _qu As Double            'Ultimate lateral load [N/cm2]
     Public _τ As Double             'Edge shear stress
     Public _kx As Double            'Ratio of edge stresses X direction
     Public _ky As Double            'Ratio of edge stresses Y direction
@@ -93,8 +94,9 @@ Public Class Form1
         _E = NumericUpDown13.Value      'Elasticity
         _v = NumericUpDown12.Value      'Poissons
         _Pr = NumericUpDown16.Value     'Proportional lineair elastic limit of structure
+        _η = IIf(RadioButton4.Checked, 0.6, 0.8)    'See page 2
     End Sub
-    'See page 28
+    'See page 28 of the ABS guide for Buckling
     Private Sub Calc_chaper3_1_1()
         Dim Ks, τE, C1 As Double
 
@@ -123,7 +125,7 @@ Public Class Form1
         TextBox3.Text = Round(Ks, 2).ToString
         TextBox4.Text = Round(_τ0, 0).ToString
     End Sub
-    'See page 29
+    'See page 29 of the ABS guide for Buckling
     Private Sub Calc_chaper3_1_2()
         Dim σCix, σEix As Double
         Dim σCiy, σEiy As Double
@@ -222,12 +224,12 @@ Public Class Form1
         TextBox15.Text = Round(σCiy, 0).ToString
     End Sub
 
-    'See page 30
+    'See page 30 of the ABS guide for Buckling
     Private Sub Calc_chaper3_3()
-        Dim τu, σux, σuy, Cy, Cx As Double
+        Dim τu, σux, σuy, Cy, Cx, φ As Double
+        Dim strength_criterium As Double
 
         _β = _S / _t * Sqrt(_σ0 / _E)   'Slenderness ratio
-        _η = 0.6                        'See page 2
 
         'Utimate strength
         τu = _τC + 0.5 * (_σ0 - Sqrt(3 * _τC)) / (1 + _α + _α ^ 2) ^ 0.5
@@ -253,7 +255,16 @@ Public Class Form1
         If σuy < _σCy Then σux = _σCy
 
         '-------- φ (phi)-------------
+        φ = 1 - _β / 2
 
+        '--------- strength criterium----------------
+        strength_criterium = (_σxmax / (_η * σux)) ^ 2
+        strength_criterium -= φ * (_σxmax / (_η * σux)) * (_σymax / (_η * σuy))
+        strength_criterium += (_σymax / (_η * σux)) ^ 2
+        strength_criterium += (_τ / (_η * τu)) ^ 2
+
+        Label112.Text = IIf(strength_criterium <= 1, "Plate buckling state limit  OK", "Plate buckling state limit NOK")
+        Label112.BackColor = IIf(strength_criterium <= 1, Color.LightGreen, Color.Coral)
 
         TextBox12.Text = Round(_β, 2).ToString
         TextBox19.Text = Round(_η, 2).ToString
@@ -263,15 +274,27 @@ Public Class Form1
         TextBox25.Text = Round(τu, 0).ToString
         TextBox26.Text = Round(σux, 0).ToString
         TextBox27.Text = Round(σuy, 0).ToString
+        TextBox28.Text = Round(φ, 2).ToString
+        TextBox29.Text = Round(strength_criterium, 4).ToString
     End Sub
+    'See page 31 of the ABS guide for Buckling
+    Private Sub Calc_chaper3_5()
+        Dim σe As Double
 
+        σe = Sqrt(_σxmax ^ 2 - _σxmax * _σymax + _σymax ^ 2 + 3 * _τ ^ 2) 'Von misses
+        _qu = _η * _σ0 * (_t / _S) ^ 2 * (1 + _α ^ -2) * Sqrt(1 - (σe / _σ0) ^ 2)
+
+        TextBox30.Text = Round(_qu, 3).ToString
+        TextBox30.BackColor = IIf(_qu >= _q, Color.LightGreen, Color.Coral)
+        NumericUpDown6.BackColor = TextBox30.BackColor
+    End Sub
     'See page 27
     Private Sub Calc_chaper3_1()
-        Dim strength_criterium As Double
+        '    Dim strength_criterium As Double
 
-        strength_criterium = (_σxmax / (_η * _σCx)) ^ 2 + (_σymax / (_η * _σCy)) ^ 2 + (_τ / (_η * _τC)) ^ 2
-        Label112.Text = IIf(strength_criterium <= 1, "Plate buckling state limit  OK", "Plate buckling state limit NOK")
-        Label112.BackColor = IIf(strength_criterium <= 1, Color.Green, Color.Red)
+        '    strength_criterium = (_σxmax / (_η * _σCx)) ^ 2 + (_σymax / (_η * _σCy)) ^ 2 + (_τ / (_η * _τC)) ^ 2
+        '    Label112.Text = IIf(strength_criterium <= 1, "Plate buckling state limit  OK", "Plate buckling state limit NOK")
+        '    Label112.BackColor = IIf(strength_criterium <= 1, Color.Green, Color.Coral)
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
@@ -279,9 +302,8 @@ Public Class Form1
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click, NumericUpDown9.Enter, NumericUpDown8.Enter, NumericUpDown7.Enter, NumericUpDown6.Enter, NumericUpDown5.Enter, NumericUpDown4.Enter, NumericUpDown9.ValueChanged, NumericUpDown8.ValueChanged, NumericUpDown7.ValueChanged, NumericUpDown6.ValueChanged, NumericUpDown5.ValueChanged, NumericUpDown4.ValueChanged
-        Read_loads()
+        Calc_sequence()
     End Sub
-
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click, GroupBox1.Enter, NumericUpDown3.Enter, NumericUpDown3.Click, NumericUpDown2.Enter, NumericUpDown2.Click, NumericUpDown1.Enter, NumericUpDown1.Click
         Calc_sequence()
@@ -294,7 +316,7 @@ Public Class Form1
         Calc_chaper3_1_1()
         Calc_chaper3_1_2()
         Calc_chaper3_3()
-        Calc_chaper3_1()
+        Calc_chaper3_5()
     End Sub
 
 End Class
