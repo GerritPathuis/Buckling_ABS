@@ -22,7 +22,27 @@ Buckling_1
   resource lookups using this strongly typed resource class.
 </summary>
 </member>
+<member name="P:Buckling_1.My.Resources.Resources.Figure1">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:Buckling_1.My.Resources.Resources.Figure2">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:Buckling_1.My.Resources.Resources.Figure5">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:Buckling_1.My.Resources.Resources.Figure7">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:Buckling_1.My.Resources.Resources.Figure8">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
