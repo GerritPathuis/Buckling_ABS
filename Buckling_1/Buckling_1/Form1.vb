@@ -61,17 +61,19 @@ Public Class Form1
     Private Sub Read_loads()
         _q = NumericUpDown6.Value   'Uniform lateral load [N/cm2]
         _σax = NumericUpDown5.Value 'Comp stress in longit direction
-        _σay = NumericUpDown4.Value 'Comp stress in travesre direction
-
         _σbx = NumericUpDown9.Value 'Bending stress in longit direction
+
+        _σay = NumericUpDown4.Value 'Comp stress in tranvesre direction
         _σby = NumericUpDown8.Value 'Bending stress in traverse direction
 
         _τ = NumericUpDown7.Value   'Edge shear stress
 
+        '------- X direction---------
         _σxmax = _σax + _σbx 'maximum compressive stress in longitudinal direction
-        _σymax = _σay + _σby 'maximum compressive stress in transverse direction
-
         _σxmin = _σax - _σbx 'minimum compressive stress in longitudinal direction
+
+        '------- Y direction---------
+        _σymax = _σay + _σby 'maximum compressive stress in transverse direction
         _σymin = _σay - _σby 'minimum compressive stress in transverse direction
 
         _kx = _σxmin / _σxmax
@@ -83,10 +85,10 @@ Public Class Form1
         TextBox7.Text = Round(_σxmin, 0).ToString
         TextBox8.Text = Round(_σymin, 0).ToString
 
-        TextBox9.Text = Round(_kx, 1).ToString
-        TextBox20.Text = Round(_kx, 1).ToString
-        TextBox10.Text = Round(_ky, 1).ToString
-        TextBox21.Text = Round(_ky, 1).ToString
+        TextBox9.Text = Round(_kx, 2).ToString("0.00")
+        TextBox20.Text = Round(_kx, 2).ToString("0.00")
+        TextBox10.Text = Round(_ky, 2).ToString("0.00")
+        TextBox21.Text = Round(_ky, 2).ToString("0.00")
     End Sub
     Private Sub Read_properties()
         _σ0 = NumericUpDown14.Value
@@ -146,14 +148,14 @@ Public Class Form1
         End Select
 
         '============== X DIRECTION============================================
-        '==============Loading applied along short edge========================
-        If (_kx >= 0 And _kx <= 1) Then
-            Ksx_short = C1 * 8.4 / (_kx + 1.1)
-        Else
-            Ksx_short = C1 * (7.6 - 6.4 * _kx + 10 * _kx ^ 2)
-        End If
+        ''==============Loading applied along short edge========================
+        'If (_kx >= 0 And _kx <= 1) Then
+        '    Ksx_short = C1 * 8.4 / (_kx + 1.1)
+        'Else
+        '    Ksx_short = C1 * (7.6 - 6.4 * _kx + 10 * _kx ^ 2)
+        'End If
 
-        '==============Loading applied along short edge========================
+        '==============Loading applied along long edge========================
         If (_kx < 1 / 3) Then
             If (_α >= 1 And _α <= 2) Then
                 Ksx_long = 24 / _α ^ 2
@@ -170,7 +172,6 @@ Public Class Form1
         End If
 
         '==============Elastic buckling stress=============================
-
         σEix = Ksx_long * (_t / _S) ^ 2 * (PI ^ 2 * _E) / (12 * (1 - _v ^ 2))
 
         '==============Critical buckling stress=============================
@@ -180,8 +181,7 @@ Public Class Form1
             σCix = _σ0 * (1 - _Pr * (1 - _Pr) * _σ0 / σEix)
         End If
 
-
-        TextBox18.Text = Round(Ksx_long, 2).ToString
+        TextBox18.Text = Round(Ksx_long, 2).ToString("0.00")
         TextBox13.Text = Round(σEix, 0).ToString
         TextBox14.Text = Round(σCix, 0).ToString
 
@@ -193,21 +193,21 @@ Public Class Form1
             Ksy_short = C1 * (7.6 - 6.4 * _kx + 10 * _kx ^ 2)
         End If
 
-        '==============Loading applied along short edge========================
-        If (_kx < 1 / 3) Then
-            If (_α >= 1 And _α <= 2) Then
-                Ksy_long = 24 / _α ^ 2
-                Ksy_long += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 18 / _α ^ 2) * (1 + _kx)
-                Ksy_long *= C2
-            Else
-                Ksy_long = 12 / _α ^ 2
-                Ksy_long += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 9 / _α ^ 2) * (1 + _kx)
-                Ksy_long *= C2
-            End If
-        Else
-            Ksy_long = (1 + 1 / _α ^ 2) ^ 2 * (1.675 - 0.675 * _kx)
-            Ksy_long *= C2
-        End If
+        '==============Loading applied along long edge========================
+        'If (_kx < 1 / 3) Then
+        '    If (_α >= 1 And _α <= 2) Then
+        '        Ksy_long = 24 / _α ^ 2
+        '        Ksy_long += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 18 / _α ^ 2) * (1 + _kx)
+        '        Ksy_long *= C2
+        '    Else
+        '        Ksy_long = 12 / _α ^ 2
+        '        Ksy_long += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 9 / _α ^ 2) * (1 + _kx)
+        '        Ksy_long *= C2
+        '    End If
+        'Else
+        '    Ksy_long = (1 + 1 / _α ^ 2) ^ 2 * (1.675 - 0.675 * _kx)
+        '    Ksy_long *= C2
+        'End If
 
         '==============Elastic buckling stress=============================
         σEiy = Ksy_short * (_t / _S) ^ 2 * (PI ^ 2 * _E) / (12 * (1 - _v ^ 2))
@@ -219,7 +219,7 @@ Public Class Form1
             σCiy = _σ0 * (1 - _Pr * (1 - _Pr) * _σ0 / σEiy)
         End If
 
-        TextBox17.Text = Round(Ksy_short, 2).ToString
+        TextBox17.Text = Round(Ksy_short, 2).ToString("0.00")
         TextBox16.Text = Round(σEiy, 0).ToString
         TextBox15.Text = Round(σCiy, 0).ToString
     End Sub
@@ -282,21 +282,13 @@ Public Class Form1
         Dim σe As Double
 
         σe = Sqrt(_σxmax ^ 2 - _σxmax * _σymax + _σymax ^ 2 + 3 * _τ ^ 2) 'Von misses
-        _qu = _η * _σ0 * (_t / _S) ^ 2 * (1 + _α ^ -2) * Sqrt(1 - (σe / _σ0) ^ 2)
+        _qu = _η * 4.0 * _σ0 * (_t / _S) ^ 2 * (1 + 1 / _α ^ 2) * Sqrt(1 - (σe / _σ0) ^ 2)
 
+        TextBox31.Text = Round(σe, 1).ToString
         TextBox30.Text = Round(_qu, 3).ToString
         TextBox30.BackColor = IIf(_qu >= _q, Color.LightGreen, Color.Coral)
         NumericUpDown6.BackColor = TextBox30.BackColor
     End Sub
-    'See page 27
-    Private Sub Calc_chaper3_1()
-        '    Dim strength_criterium As Double
-
-        '    strength_criterium = (_σxmax / (_η * _σCx)) ^ 2 + (_σymax / (_η * _σCy)) ^ 2 + (_τ / (_η * _τC)) ^ 2
-        '    Label112.Text = IIf(strength_criterium <= 1, "Plate buckling state limit  OK", "Plate buckling state limit NOK")
-        '    Label112.BackColor = IIf(strength_criterium <= 1, Color.Green, Color.Coral)
-    End Sub
-
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
         Calc_sequence()
     End Sub
