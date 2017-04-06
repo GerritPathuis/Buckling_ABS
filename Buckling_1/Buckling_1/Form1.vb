@@ -289,6 +289,38 @@ Public Class Form1
         TextBox30.BackColor = IIf(_qu >= _q, Color.LightGreen, Color.Coral)
         NumericUpDown6.BackColor = TextBox30.BackColor
     End Sub
+    'See page 45 of the ABS guide for Buckling
+    Private Sub Calc_chaper13_1()
+        Dim dw, tw, bf, tf, b1, Ass, Ae, Zep, Ie, Aw, Zwp As Double
+        bf = NumericUpDown18.Value
+        tf = NumericUpDown15.Value
+        b1 = NumericUpDown17.Value
+        dw = NumericUpDown11.Value
+        tw = NumericUpDown10.Value
+
+        Ass = 1
+        Ae = 1
+        Zep = 1
+        Ie = 1
+        Aw = 1
+        Zwp = 1
+
+        TextBox32.Text = Round(Ass, 1).ToString
+        TextBox33.Text = Round(Ass, 1).ToString
+        TextBox34.Text = Round(Ass, 1).ToString
+
+        TextBox35.Text = Round(Ass, 1).ToString
+        TextBox36.Text = Round(Ass, 1).ToString
+        TextBox37.Text = Round(Ass, 1).ToString
+        TextBox38.Text = Round(Ass, 1).ToString
+
+        TextBox39.Text = Round(Ass, 1).ToString
+        TextBox40.Text = Round(Ass, 1).ToString
+        TextBox41.Text = Round(Ass, 1).ToString
+        TextBox42.Text = Round(Ass, 1).ToString
+        TextBox43.Text = Round(Ass, 1).ToString
+    End Sub
+
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
         Calc_sequence()
     End Sub
@@ -299,6 +331,10 @@ Public Class Form1
 
     Private Sub Label215_Click(sender As Object, e As EventArgs) Handles Label215.Click
 
+    End Sub
+
+    Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
+        Calc_sequence()
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click, GroupBox1.Enter, NumericUpDown3.Enter, NumericUpDown3.Click, NumericUpDown2.Enter, NumericUpDown2.Click, NumericUpDown1.Enter, NumericUpDown1.Click
@@ -313,6 +349,7 @@ Public Class Form1
         Calc_chaper3_1_2()
         Calc_chaper3_3()
         Calc_chaper3_5()
+        Calc_chaper13_1()
     End Sub
 
 End Class
