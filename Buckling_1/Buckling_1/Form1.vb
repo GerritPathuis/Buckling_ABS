@@ -131,8 +131,8 @@ Public Class Form1
     Private Sub Calc_chaper3_1_2()
         Dim σCix, σEix As Double
         Dim σCiy, σEiy As Double
-        Dim Ksx_short, Ksx_long As Double
-        Dim Ksy_short, Ksy_long As Double
+        Dim Ksx_long As Double
+        Dim Ksy_short As Double
         Dim C1, C2 As Double
 
         Select Case True
@@ -146,14 +146,6 @@ Public Class Form1
                 C1 = 1.0
                 C2 = 1.0
         End Select
-
-        '============== X DIRECTION============================================
-        ''==============Loading applied along short edge========================
-        'If (_kx >= 0 And _kx <= 1) Then
-        '    Ksx_short = C1 * 8.4 / (_kx + 1.1)
-        'Else
-        '    Ksx_short = C1 * (7.6 - 6.4 * _kx + 10 * _kx ^ 2)
-        'End If
 
         '==============Loading applied along long edge========================
         If (_kx < 1 / 3) Then
@@ -192,22 +184,6 @@ Public Class Form1
         Else
             Ksy_short = C1 * (7.6 - 6.4 * _kx + 10 * _kx ^ 2)
         End If
-
-        '==============Loading applied along long edge========================
-        'If (_kx < 1 / 3) Then
-        '    If (_α >= 1 And _α <= 2) Then
-        '        Ksy_long = 24 / _α ^ 2
-        '        Ksy_long += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 18 / _α ^ 2) * (1 + _kx)
-        '        Ksy_long *= C2
-        '    Else
-        '        Ksy_long = 12 / _α ^ 2
-        '        Ksy_long += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 9 / _α ^ 2) * (1 + _kx)
-        '        Ksy_long *= C2
-        '    End If
-        'Else
-        '    Ksy_long = (1 + 1 / _α ^ 2) ^ 2 * (1.675 - 0.675 * _kx)
-        '    Ksy_long *= C2
-        'End If
 
         '==============Elastic buckling stress=============================
         σEiy = Ksy_short * (_t / _S) ^ 2 * (PI ^ 2 * _E) / (12 * (1 - _v ^ 2))
@@ -291,35 +267,61 @@ Public Class Form1
     End Sub
     'See page 45 of the ABS guide for Buckling
     Private Sub Calc_chaper13_1()
-        Dim dw, tw, bf, tf, b1, Ass, Ae, Zep, Ie, Aw, Zwp As Double
+        Dim dw, tw, bf, tf, b1, Ass, A_tot, Ae, Zep, Aw, Zwp, se, sw As Double
+        Dim re, Iw, Ie, smw As Double
         bf = NumericUpDown18.Value
         tf = NumericUpDown15.Value
         b1 = NumericUpDown17.Value
         dw = NumericUpDown11.Value
         tw = NumericUpDown10.Value
 
-        Ass = 1
-        Ae = 1
-        Zep = 1
-        Ie = 1
-        Aw = 1
-        Zwp = 1
+        se = _S     'Page 32, Buckling state limit is satisfied
+        sw = se     'Effective breadth figure 8.
 
-        TextBox32.Text = Round(Ass, 1).ToString
-        TextBox33.Text = Round(Ass, 1).ToString
+        Ass = dw * tw + bf * tf
+        Ae = se * _t + Ass
+        A_tot = Ass + Ae
+
+        Zep = (0.5 * ((_t + dw) * dw * tw) + (0.5 * _t + dw + 0.5 * tf) * bf * tf) / Ae
+
+        Ie = _t ^ 3 * se / 12
+        Ie += dw ^ 3 * tw / 12
+        Ie += tf ^ 3 * bf / 12
+        Ie += 0.25 * (_t + dw) ^ 2 * dw * tw
+        Ie += bf * tf * (0.5 * _t + dw + 0.5 * tf) ^ 2
+        Ie -= Ae * Zep ^ 2
+
+        re = Sqrt(Ie / Ae)
+        Aw = sw * _t + Ass
+        Zwp = (0.5 * ((_t + dw) * dw * tw) + (0.5 * _t + dw + 0.5 * tf) * bf * tf) / Aw
+
+        Iw = _t ^ 3 * se / 12
+        Iw += dw ^ 3 * tw / 12
+        Iw += tf ^ 3 * bf / 12
+        Iw += 0.25 * (_t + dw) ^ 2 * dw * tw
+        Iw += bf * tf * (0.5 * _t + dw + 0.5 * tf) ^ 2
+        Iw -= Ae * Zep ^ 2
+
+        smw = Iw / ((0.5 * _t + dw + tf) - Zwp)
+
+        TextBox32.Text = Round(se, 1).ToString
+        TextBox33.Text = Round(sw, 1).ToString
         TextBox34.Text = Round(Ass, 1).ToString
-
-        TextBox35.Text = Round(Ass, 1).ToString
-        TextBox36.Text = Round(Ass, 1).ToString
-        TextBox37.Text = Round(Ass, 1).ToString
-        TextBox38.Text = Round(Ass, 1).ToString
-
-        TextBox39.Text = Round(Ass, 1).ToString
-        TextBox40.Text = Round(Ass, 1).ToString
-        TextBox41.Text = Round(Ass, 1).ToString
-        TextBox42.Text = Round(Ass, 1).ToString
-        TextBox43.Text = Round(Ass, 1).ToString
+        TextBox35.Text = Round(A_tot, 1).ToString
+        TextBox36.Text = Round(Ae, 1).ToString
+        TextBox37.Text = Round(Aw, 1).ToString
+        TextBox38.Text = Round(Zep, 1).ToString
+        TextBox39.Text = Round(Ie, 1).ToString
+        TextBox40.Text = Round(re, 1).ToString
+        TextBox41.Text = Round(Zwp, 1).ToString
+        TextBox42.Text = Round(Iw, 1).ToString
+        TextBox43.Text = Round(smw, 1).ToString
     End Sub
+    Private Sub Calc_chaper5_1()
+
+
+    End Sub
+
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
         Calc_sequence()
@@ -350,6 +352,7 @@ Public Class Form1
         Calc_chaper3_3()
         Calc_chaper3_5()
         Calc_chaper13_1()
+        Calc_chaper5_1()
     End Sub
 
 End Class
