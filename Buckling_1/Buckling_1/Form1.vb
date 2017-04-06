@@ -45,6 +45,18 @@ Public Class Form1
     Public _LG As Double        'girder length [mm]
     Public _β As Double         'slenderness ratio [-]
 
+    Public _Iw As Double    'Moment of inertia of stiffener and effective plating sw
+    Public _Ie As Double    'Moment Of inertia Of stiffener And effective plating se
+
+    Public _se As Double    'Plate effective width (plate buckling limit must be satiesfied)
+    Public _sw As Double    'Plate effective breadth
+
+    Public _re As Double    'Radius of giration od Area Ae
+    Dim _φ As Double        'Interaction between longitudinal and transverse sresses
+
+    Public _σUx As Double   'Ultimate stress 
+    Public _σUy As Double   'Ultimate stress 
+
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Calc_sequence()
@@ -202,7 +214,7 @@ Public Class Form1
 
     'See page 30 of the ABS guide for Buckling
     Private Sub Calc_chaper3_3()
-        Dim τu, σux, σuy, Cy, Cx, φ As Double
+        Dim τu, Cy, Cx As Double
         Dim strength_criterium As Double
 
         _β = _S / _t * Sqrt(_σ0 / _E)   'Slenderness ratio
@@ -223,20 +235,20 @@ Public Class Form1
         If Cy > 1 Then Cy = 1
 
         '-------- σux -------------
-        σux = Cx * _σ0
-        If σux < _σCx Then σux = _σCx
+        _σUx = Cx * _σ0
+        If _σUx < _σCx Then _σUx = _σCx
 
         '-------- σuy -------------
-        σuy = Cy * _σ0
-        If σuy < _σCy Then σux = _σCy
+        _σUy = Cy * _σ0
+        If _σUy < _σCy Then _σUx = _σCy
 
         '-------- φ (phi)-------------
-        φ = 1 - _β / 2
+        _φ = 1 - _β / 2
 
         '--------- strength criterium----------------
-        strength_criterium = (_σxmax / (_η * σux)) ^ 2
-        strength_criterium -= φ * (_σxmax / (_η * σux)) * (_σymax / (_η * σuy))
-        strength_criterium += (_σymax / (_η * σux)) ^ 2
+        strength_criterium = (_σxmax / (_η * _σUx)) ^ 2
+        strength_criterium -= _φ * (_σxmax / (_η * _σUx)) * (_σymax / (_η * _σUy))
+        strength_criterium += (_σymax / (_η * _σUx)) ^ 2
         strength_criterium += (_τ / (_η * τu)) ^ 2
 
         Label112.Text = IIf(strength_criterium <= 1, "Plate buckling state limit  OK", "Plate buckling state limit NOK")
@@ -248,9 +260,9 @@ Public Class Form1
         TextBox23.Text = Round(Cx, 2).ToString
         TextBox24.Text = Round(Cy, 2).ToString
         TextBox25.Text = Round(τu, 0).ToString
-        TextBox26.Text = Round(σux, 0).ToString
-        TextBox27.Text = Round(σuy, 0).ToString
-        TextBox28.Text = Round(φ, 2).ToString
+        TextBox26.Text = Round(_σUx, 0).ToString
+        TextBox27.Text = Round(_σUy, 0).ToString
+        TextBox28.Text = Round(_φ, 2).ToString
         TextBox29.Text = Round(strength_criterium, 4).ToString
     End Sub
     'See page 31 of the ABS guide for Buckling
@@ -267,72 +279,89 @@ Public Class Form1
     End Sub
     'See page 45 of the ABS guide for Buckling
     Private Sub Calc_chaper13_1()
-        Dim dw, tw, bf, tf, b1, Ass, A_tot, Ae, Zep, Aw, Zwp, se, sw As Double
-        Dim re, Iw, Ie, smw As Double
+        Dim dw, tw, bf, tf, b1, Ass, A_tot, Ae, Zep, Aw, Zwp As Double
+        Dim smw As Double
         bf = NumericUpDown18.Value
         tf = NumericUpDown15.Value
         b1 = NumericUpDown17.Value
         dw = NumericUpDown11.Value
         tw = NumericUpDown10.Value
 
-        se = _S     'Page 32, Buckling state limit is satisfied
-        sw = se     'Effective breadth figure 8.
+        _se = _S     'Page 32, Buckling state limit is satisfied
+        _sw = _se     'Effective breadth figure 8.
 
         Ass = dw * tw + bf * tf
-        Ae = se * _t + Ass
+        Ae = _se * _t + Ass
         A_tot = Ass + Ae
 
         Zep = (0.5 * ((_t + dw) * dw * tw) + (0.5 * _t + dw + 0.5 * tf) * bf * tf) / Ae
 
-        Ie = _t ^ 3 * se / 12
-        Ie += dw ^ 3 * tw / 12
-        Ie += tf ^ 3 * bf / 12
-        Ie += 0.25 * (_t + dw) ^ 2 * dw * tw
-        Ie += bf * tf * (0.5 * _t + dw + 0.5 * tf) ^ 2
-        Ie -= Ae * Zep ^ 2
+        _Ie = _t ^ 3 * _se / 12
+        _Ie += dw ^ 3 * tw / 12
+        _Ie += tf ^ 3 * bf / 12
+        _Ie += 0.25 * (_t + dw) ^ 2 * dw * tw
+        _Ie += bf * tf * (0.5 * _t + dw + 0.5 * tf) ^ 2
+        _Ie -= Ae * Zep ^ 2
 
-        re = Sqrt(Ie / Ae)
-        Aw = sw * _t + Ass
+        _re = Sqrt(_Ie / Ae)
+        Aw = _sw * _t + Ass
         Zwp = (0.5 * ((_t + dw) * dw * tw) + (0.5 * _t + dw + 0.5 * tf) * bf * tf) / Aw
 
-        Iw = _t ^ 3 * se / 12
-        Iw += dw ^ 3 * tw / 12
-        Iw += tf ^ 3 * bf / 12
-        Iw += 0.25 * (_t + dw) ^ 2 * dw * tw
-        Iw += bf * tf * (0.5 * _t + dw + 0.5 * tf) ^ 2
-        Iw -= Ae * Zep ^ 2
+        _Iw = _t ^ 3 * _se / 12
+        _Iw += dw ^ 3 * tw / 12
+        _Iw += tf ^ 3 * bf / 12
+        _Iw += 0.25 * (_t + dw) ^ 2 * dw * tw
+        _Iw += bf * tf * (0.5 * _t + dw + 0.5 * tf) ^ 2
+        _Iw -= Ae * Zep ^ 2
 
-        smw = Iw / ((0.5 * _t + dw + tf) - Zwp)
+        smw = _Iw / ((0.5 * _t + dw + tf) - Zwp)
 
-        TextBox32.Text = Round(se, 1).ToString
-        TextBox33.Text = Round(sw, 1).ToString
+        TextBox32.Text = Round(_se, 1).ToString
+        TextBox33.Text = Round(_sw, 1).ToString
         TextBox34.Text = Round(Ass, 1).ToString
         TextBox35.Text = Round(A_tot, 1).ToString
         TextBox36.Text = Round(Ae, 1).ToString
         TextBox37.Text = Round(Aw, 1).ToString
         TextBox38.Text = Round(Zep, 1).ToString
-        TextBox39.Text = Round(Ie, 1).ToString
-        TextBox40.Text = Round(re, 1).ToString
+        TextBox39.Text = Round(_Ie, 1).ToString
+        TextBox40.Text = Round(_re, 1).ToString
         TextBox41.Text = Round(Zwp, 1).ToString
-        TextBox42.Text = Round(Iw, 1).ToString
+        TextBox42.Text = Round(_Iw, 1).ToString
         TextBox43.Text = Round(smw, 1).ToString
     End Sub
+    'See page 32 of the ABS guide for Buckling
     Private Sub Calc_chaper5_1()
+        Dim σa, σE, σCA, Mf, σbf, Cm As Double
+        Dim Cy, Cx, Cxy As Double
 
+        Cy = 0.5 * _φ * (_σymax / _σUy) + Sqrt(1 - (1 - 0.25 * _φ ^ 2) * (_σymax / _σUy) ^ 2)
 
+        If _β > 1 Then
+            Cx = 2 / _β - 1 / _β ^ 2
+        Else
+            Cx = 1
+        End If
+
+        Cxy = Sqrt(1 - (_τ / _τ0) ^ 2)
+
+        TextBox44.Text = Round(σa, 1).ToString
+        TextBox45.Text = Round(σE, 1).ToString
+        TextBox46.Text = Round(_Pr, 1).ToString
+        TextBox47.Text = Round(σCA, 1).ToString
+        TextBox48.Text = Round(Mf, 1).ToString
+        TextBox49.Text = Round(σbf, 1).ToString
+        TextBox50.Text = Round(Cm, 1).ToString
+        TextBox51.Text = Round(_η, 1).ToString
+        TextBox52.Text = Round(_re, 1).ToString
+        TextBox53.Text = Round(_re, 1).ToString
+        TextBox54.Text = Round(_re, 1).ToString
+        TextBox55.Text = Round(_re, 1).ToString
     End Sub
-
-
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
         Calc_sequence()
     End Sub
-
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click, NumericUpDown9.Enter, NumericUpDown8.Enter, NumericUpDown7.Enter, NumericUpDown6.Enter, NumericUpDown5.Enter, NumericUpDown4.Enter, NumericUpDown9.ValueChanged, NumericUpDown8.ValueChanged, NumericUpDown7.ValueChanged, NumericUpDown6.ValueChanged, NumericUpDown5.ValueChanged, NumericUpDown4.ValueChanged
         Calc_sequence()
-    End Sub
-
-    Private Sub Label215_Click(sender As Object, e As EventArgs) Handles Label215.Click
-
     End Sub
 
     Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click

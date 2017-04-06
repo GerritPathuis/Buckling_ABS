@@ -215,6 +215,11 @@ Partial Class Form1
         Me.TabPage6 = New System.Windows.Forms.TabPage()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.TabPage7 = New System.Windows.Forms.TabPage()
+        Me.GroupBox8 = New System.Windows.Forms.GroupBox()
+        Me.Label54 = New System.Windows.Forms.Label()
+        Me.Label57 = New System.Windows.Forms.Label()
+        Me.NumericUpDown19 = New System.Windows.Forms.NumericUpDown()
+        Me.Label58 = New System.Windows.Forms.Label()
         Me.PictureBox3 = New System.Windows.Forms.PictureBox()
         Me.TabPage8 = New System.Windows.Forms.TabPage()
         Me.Label181 = New System.Windows.Forms.Label()
@@ -233,7 +238,6 @@ Partial Class Form1
         Me.TextBox44 = New System.Windows.Forms.TextBox()
         Me.Label182 = New System.Windows.Forms.Label()
         Me.Label183 = New System.Windows.Forms.Label()
-        Me.TextBox55 = New System.Windows.Forms.TextBox()
         Me.Label190 = New System.Windows.Forms.Label()
         Me.Label191 = New System.Windows.Forms.Label()
         Me.Label192 = New System.Windows.Forms.Label()
@@ -331,11 +335,7 @@ Partial Class Form1
         Me.Label106 = New System.Windows.Forms.Label()
         Me.Label143 = New System.Windows.Forms.Label()
         Me.Label144 = New System.Windows.Forms.Label()
-        Me.GroupBox8 = New System.Windows.Forms.GroupBox()
-        Me.Label54 = New System.Windows.Forms.Label()
-        Me.Label57 = New System.Windows.Forms.Label()
-        Me.NumericUpDown19 = New System.Windows.Forms.NumericUpDown()
-        Me.Label58 = New System.Windows.Forms.Label()
+        Me.TextBox55 = New System.Windows.Forms.TextBox()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -374,6 +374,8 @@ Partial Class Form1
         Me.TabPage6.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage7.SuspendLayout()
+        Me.GroupBox8.SuspendLayout()
+        CType(Me.NumericUpDown19, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage8.SuspendLayout()
         Me.GroupBox17.SuspendLayout()
@@ -384,8 +386,6 @@ Partial Class Form1
         CType(Me.NumericUpDown15, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown17, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown18, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.GroupBox8.SuspendLayout()
-        CType(Me.NumericUpDown19, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -2470,6 +2470,60 @@ Partial Class Form1
         Me.TabPage7.Text = "Fig 8"
         Me.TabPage7.UseVisualStyleBackColor = True
         '
+        'GroupBox8
+        '
+        Me.GroupBox8.Controls.Add(Me.Label54)
+        Me.GroupBox8.Controls.Add(Me.Label57)
+        Me.GroupBox8.Controls.Add(Me.NumericUpDown19)
+        Me.GroupBox8.Controls.Add(Me.Label58)
+        Me.GroupBox8.Dock = System.Windows.Forms.DockStyle.Top
+        Me.GroupBox8.Location = New System.Drawing.Point(3, 3)
+        Me.GroupBox8.Name = "GroupBox8"
+        Me.GroupBox8.Size = New System.Drawing.Size(564, 135)
+        Me.GroupBox8.TabIndex = 42
+        Me.GroupBox8.TabStop = False
+        Me.GroupBox8.Text = "GroupBox8"
+        '
+        'Label54
+        '
+        Me.Label54.AutoSize = True
+        Me.Label54.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label54.Location = New System.Drawing.Point(360, 56)
+        Me.Label54.Name = "Label54"
+        Me.Label54.Size = New System.Drawing.Size(34, 16)
+        Me.Label54.TabIndex = 32
+        Me.Label54.Text = "[cm]"
+        '
+        'Label57
+        '
+        Me.Label57.AutoSize = True
+        Me.Label57.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label57.Location = New System.Drawing.Point(421, 58)
+        Me.Label57.Name = "Label57"
+        Me.Label57.Size = New System.Drawing.Size(20, 16)
+        Me.Label57.TabIndex = 31
+        Me.Label57.Text = "tw"
+        '
+        'NumericUpDown19
+        '
+        Me.NumericUpDown19.DecimalPlaces = 1
+        Me.NumericUpDown19.Location = New System.Drawing.Point(473, 58)
+        Me.NumericUpDown19.Name = "NumericUpDown19"
+        Me.NumericUpDown19.Size = New System.Drawing.Size(78, 20)
+        Me.NumericUpDown19.TabIndex = 30
+        Me.NumericUpDown19.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.NumericUpDown19.Value = New Decimal(New Integer() {4, 0, 0, 65536})
+        '
+        'Label58
+        '
+        Me.Label58.AutoSize = True
+        Me.Label58.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label58.Location = New System.Drawing.Point(13, 59)
+        Me.Label58.Name = "Label58"
+        Me.Label58.Size = New System.Drawing.Size(170, 16)
+        Me.Label58.TabIndex = 29
+        Me.Label58.Text = "Effective breadth op plating"
+        '
         'PictureBox3
         '
         Me.PictureBox3.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -2507,6 +2561,7 @@ Partial Class Form1
         '
         'GroupBox17
         '
+        Me.GroupBox17.Controls.Add(Me.TextBox55)
         Me.GroupBox17.Controls.Add(Me.Button6)
         Me.GroupBox17.Controls.Add(Me.TextBox54)
         Me.GroupBox17.Controls.Add(Me.TextBox53)
@@ -2521,7 +2576,6 @@ Partial Class Form1
         Me.GroupBox17.Controls.Add(Me.TextBox44)
         Me.GroupBox17.Controls.Add(Me.Label182)
         Me.GroupBox17.Controls.Add(Me.Label183)
-        Me.GroupBox17.Controls.Add(Me.TextBox55)
         Me.GroupBox17.Controls.Add(Me.Label190)
         Me.GroupBox17.Controls.Add(Me.Label191)
         Me.GroupBox17.Controls.Add(Me.Label192)
@@ -2568,7 +2622,7 @@ Partial Class Form1
         '
         'TextBox54
         '
-        Me.TextBox54.Location = New System.Drawing.Point(467, 261)
+        Me.TextBox54.Location = New System.Drawing.Point(467, 239)
         Me.TextBox54.Name = "TextBox54"
         Me.TextBox54.Size = New System.Drawing.Size(77, 20)
         Me.TextBox54.TabIndex = 82
@@ -2576,7 +2630,7 @@ Partial Class Form1
         '
         'TextBox53
         '
-        Me.TextBox53.Location = New System.Drawing.Point(467, 239)
+        Me.TextBox53.Location = New System.Drawing.Point(467, 217)
         Me.TextBox53.Name = "TextBox53"
         Me.TextBox53.Size = New System.Drawing.Size(77, 20)
         Me.TextBox53.TabIndex = 81
@@ -2584,7 +2638,7 @@ Partial Class Form1
         '
         'TextBox52
         '
-        Me.TextBox52.Location = New System.Drawing.Point(467, 217)
+        Me.TextBox52.Location = New System.Drawing.Point(467, 195)
         Me.TextBox52.Name = "TextBox52"
         Me.TextBox52.Size = New System.Drawing.Size(77, 20)
         Me.TextBox52.TabIndex = 80
@@ -2592,7 +2646,7 @@ Partial Class Form1
         '
         'TextBox51
         '
-        Me.TextBox51.Location = New System.Drawing.Point(467, 195)
+        Me.TextBox51.Location = New System.Drawing.Point(467, 173)
         Me.TextBox51.Name = "TextBox51"
         Me.TextBox51.Size = New System.Drawing.Size(77, 20)
         Me.TextBox51.TabIndex = 79
@@ -2600,7 +2654,7 @@ Partial Class Form1
         '
         'TextBox50
         '
-        Me.TextBox50.Location = New System.Drawing.Point(467, 173)
+        Me.TextBox50.Location = New System.Drawing.Point(467, 151)
         Me.TextBox50.Name = "TextBox50"
         Me.TextBox50.Size = New System.Drawing.Size(77, 20)
         Me.TextBox50.TabIndex = 78
@@ -2608,7 +2662,7 @@ Partial Class Form1
         '
         'TextBox49
         '
-        Me.TextBox49.Location = New System.Drawing.Point(467, 151)
+        Me.TextBox49.Location = New System.Drawing.Point(467, 129)
         Me.TextBox49.Name = "TextBox49"
         Me.TextBox49.Size = New System.Drawing.Size(77, 20)
         Me.TextBox49.TabIndex = 77
@@ -2616,7 +2670,7 @@ Partial Class Form1
         '
         'TextBox48
         '
-        Me.TextBox48.Location = New System.Drawing.Point(467, 129)
+        Me.TextBox48.Location = New System.Drawing.Point(467, 107)
         Me.TextBox48.Name = "TextBox48"
         Me.TextBox48.Size = New System.Drawing.Size(77, 20)
         Me.TextBox48.TabIndex = 76
@@ -2624,7 +2678,7 @@ Partial Class Form1
         '
         'TextBox47
         '
-        Me.TextBox47.Location = New System.Drawing.Point(467, 107)
+        Me.TextBox47.Location = New System.Drawing.Point(467, 85)
         Me.TextBox47.Name = "TextBox47"
         Me.TextBox47.Size = New System.Drawing.Size(77, 20)
         Me.TextBox47.TabIndex = 75
@@ -2632,7 +2686,7 @@ Partial Class Form1
         '
         'TextBox46
         '
-        Me.TextBox46.Location = New System.Drawing.Point(467, 85)
+        Me.TextBox46.Location = New System.Drawing.Point(467, 63)
         Me.TextBox46.Name = "TextBox46"
         Me.TextBox46.Size = New System.Drawing.Size(77, 20)
         Me.TextBox46.TabIndex = 74
@@ -2640,7 +2694,7 @@ Partial Class Form1
         '
         'TextBox45
         '
-        Me.TextBox45.Location = New System.Drawing.Point(467, 63)
+        Me.TextBox45.Location = New System.Drawing.Point(467, 41)
         Me.TextBox45.Name = "TextBox45"
         Me.TextBox45.Size = New System.Drawing.Size(77, 20)
         Me.TextBox45.TabIndex = 73
@@ -2648,7 +2702,7 @@ Partial Class Form1
         '
         'TextBox44
         '
-        Me.TextBox44.Location = New System.Drawing.Point(467, 41)
+        Me.TextBox44.Location = New System.Drawing.Point(467, 19)
         Me.TextBox44.Name = "TextBox44"
         Me.TextBox44.Size = New System.Drawing.Size(77, 20)
         Me.TextBox44.TabIndex = 72
@@ -2673,14 +2727,6 @@ Partial Class Form1
         Me.Label183.Size = New System.Drawing.Size(354, 16)
         Me.Label183.TabIndex = 70
         Me.Label183.Text = "Maximum bending strength lateral loads, simple supported"
-        '
-        'TextBox55
-        '
-        Me.TextBox55.Location = New System.Drawing.Point(467, 19)
-        Me.TextBox55.Name = "TextBox55"
-        Me.TextBox55.Size = New System.Drawing.Size(77, 20)
-        Me.TextBox55.TabIndex = 61
-        Me.TextBox55.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label190
         '
@@ -3695,59 +3741,13 @@ Partial Class Form1
         Me.Label144.TabIndex = 0
         Me.Label144.Text = "Stiffener flange width"
         '
-        'GroupBox8
+        'TextBox55
         '
-        Me.GroupBox8.Controls.Add(Me.Label54)
-        Me.GroupBox8.Controls.Add(Me.Label57)
-        Me.GroupBox8.Controls.Add(Me.NumericUpDown19)
-        Me.GroupBox8.Controls.Add(Me.Label58)
-        Me.GroupBox8.Dock = System.Windows.Forms.DockStyle.Top
-        Me.GroupBox8.Location = New System.Drawing.Point(3, 3)
-        Me.GroupBox8.Name = "GroupBox8"
-        Me.GroupBox8.Size = New System.Drawing.Size(564, 135)
-        Me.GroupBox8.TabIndex = 42
-        Me.GroupBox8.TabStop = False
-        Me.GroupBox8.Text = "GroupBox8"
-        '
-        'Label54
-        '
-        Me.Label54.AutoSize = True
-        Me.Label54.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label54.Location = New System.Drawing.Point(360, 56)
-        Me.Label54.Name = "Label54"
-        Me.Label54.Size = New System.Drawing.Size(34, 16)
-        Me.Label54.TabIndex = 32
-        Me.Label54.Text = "[cm]"
-        '
-        'Label57
-        '
-        Me.Label57.AutoSize = True
-        Me.Label57.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label57.Location = New System.Drawing.Point(421, 58)
-        Me.Label57.Name = "Label57"
-        Me.Label57.Size = New System.Drawing.Size(20, 16)
-        Me.Label57.TabIndex = 31
-        Me.Label57.Text = "tw"
-        '
-        'NumericUpDown19
-        '
-        Me.NumericUpDown19.DecimalPlaces = 1
-        Me.NumericUpDown19.Location = New System.Drawing.Point(473, 58)
-        Me.NumericUpDown19.Name = "NumericUpDown19"
-        Me.NumericUpDown19.Size = New System.Drawing.Size(78, 20)
-        Me.NumericUpDown19.TabIndex = 30
-        Me.NumericUpDown19.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        Me.NumericUpDown19.Value = New Decimal(New Integer() {4, 0, 0, 65536})
-        '
-        'Label58
-        '
-        Me.Label58.AutoSize = True
-        Me.Label58.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label58.Location = New System.Drawing.Point(13, 59)
-        Me.Label58.Name = "Label58"
-        Me.Label58.Size = New System.Drawing.Size(170, 16)
-        Me.Label58.TabIndex = 29
-        Me.Label58.Text = "Effective breadth op plating"
+        Me.TextBox55.Location = New System.Drawing.Point(468, 261)
+        Me.TextBox55.Name = "TextBox55"
+        Me.TextBox55.Size = New System.Drawing.Size(77, 20)
+        Me.TextBox55.TabIndex = 84
+        Me.TextBox55.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Form1
         '
@@ -3809,6 +3809,9 @@ Partial Class Form1
         Me.TabPage6.ResumeLayout(False)
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage7.ResumeLayout(False)
+        Me.GroupBox8.ResumeLayout(False)
+        Me.GroupBox8.PerformLayout()
+        CType(Me.NumericUpDown19, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage8.ResumeLayout(False)
         Me.TabPage8.PerformLayout()
@@ -3823,9 +3826,6 @@ Partial Class Form1
         CType(Me.NumericUpDown15, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.NumericUpDown17, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.NumericUpDown18, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GroupBox8.ResumeLayout(False)
-        Me.GroupBox8.PerformLayout()
-        CType(Me.NumericUpDown19, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -4083,7 +4083,6 @@ Partial Class Form1
     Friend WithEvents Label179 As Label
     Friend WithEvents Label180 As Label
     Friend WithEvents GroupBox17 As GroupBox
-    Friend WithEvents TextBox55 As TextBox
     Friend WithEvents Label190 As Label
     Friend WithEvents Label191 As Label
     Friend WithEvents Label192 As Label
@@ -4143,4 +4142,5 @@ Partial Class Form1
     Friend WithEvents Label57 As Label
     Friend WithEvents NumericUpDown19 As NumericUpDown
     Friend WithEvents Label58 As Label
+    Friend WithEvents TextBox55 As TextBox
 End Class
