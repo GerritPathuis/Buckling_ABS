@@ -297,6 +297,10 @@ Public Class Form1
         Calc_sequence()
     End Sub
 
+    Private Sub Label215_Click(sender As Object, e As EventArgs) Handles Label215.Click
+
+    End Sub
+
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click, GroupBox1.Enter, NumericUpDown3.Enter, NumericUpDown3.Click, NumericUpDown2.Enter, NumericUpDown2.Click, NumericUpDown1.Enter, NumericUpDown1.Click
         Calc_sequence()
     End Sub
