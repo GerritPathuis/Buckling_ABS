@@ -224,6 +224,10 @@ Partial Class Form1
         Me.TabPage8 = New System.Windows.Forms.TabPage()
         Me.Label181 = New System.Windows.Forms.Label()
         Me.GroupBox17 = New System.Windows.Forms.GroupBox()
+        Me.TextBox58 = New System.Windows.Forms.TextBox()
+        Me.TextBox57 = New System.Windows.Forms.TextBox()
+        Me.TextBox56 = New System.Windows.Forms.TextBox()
+        Me.TextBox55 = New System.Windows.Forms.TextBox()
         Me.Button6 = New System.Windows.Forms.Button()
         Me.TextBox54 = New System.Windows.Forms.TextBox()
         Me.TextBox53 = New System.Windows.Forms.TextBox()
@@ -239,7 +243,6 @@ Partial Class Form1
         Me.Label182 = New System.Windows.Forms.Label()
         Me.Label183 = New System.Windows.Forms.Label()
         Me.Label190 = New System.Windows.Forms.Label()
-        Me.Label191 = New System.Windows.Forms.Label()
         Me.Label192 = New System.Windows.Forms.Label()
         Me.Label193 = New System.Windows.Forms.Label()
         Me.Label194 = New System.Windows.Forms.Label()
@@ -335,7 +338,6 @@ Partial Class Form1
         Me.Label106 = New System.Windows.Forms.Label()
         Me.Label143 = New System.Windows.Forms.Label()
         Me.Label144 = New System.Windows.Forms.Label()
-        Me.TextBox55 = New System.Windows.Forms.TextBox()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -2555,12 +2557,15 @@ Partial Class Form1
         Me.Label181.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label181.Location = New System.Drawing.Point(15, 710)
         Me.Label181.Name = "Label181"
-        Me.Label181.Size = New System.Drawing.Size(368, 16)
+        Me.Label181.Size = New System.Drawing.Size(367, 16)
         Me.Label181.TabIndex = 72
-        Me.Label181.Text = "Beam-column buckling statet limit stiffeners simple supported"
+        Me.Label181.Text = "Beam-column buckling statet limit stiffeners simply supported"
         '
         'GroupBox17
         '
+        Me.GroupBox17.Controls.Add(Me.TextBox58)
+        Me.GroupBox17.Controls.Add(Me.TextBox57)
+        Me.GroupBox17.Controls.Add(Me.TextBox56)
         Me.GroupBox17.Controls.Add(Me.TextBox55)
         Me.GroupBox17.Controls.Add(Me.Button6)
         Me.GroupBox17.Controls.Add(Me.TextBox54)
@@ -2577,7 +2582,6 @@ Partial Class Form1
         Me.GroupBox17.Controls.Add(Me.Label182)
         Me.GroupBox17.Controls.Add(Me.Label183)
         Me.GroupBox17.Controls.Add(Me.Label190)
-        Me.GroupBox17.Controls.Add(Me.Label191)
         Me.GroupBox17.Controls.Add(Me.Label192)
         Me.GroupBox17.Controls.Add(Me.Label193)
         Me.GroupBox17.Controls.Add(Me.Label194)
@@ -2611,6 +2615,38 @@ Partial Class Form1
         Me.GroupBox17.TabStop = False
         Me.GroupBox17.Text = "Beam-Colums buckling state of limit of stiffeners (3/5.1)"
         '
+        'TextBox58
+        '
+        Me.TextBox58.Location = New System.Drawing.Point(318, 74)
+        Me.TextBox58.Name = "TextBox58"
+        Me.TextBox58.Size = New System.Drawing.Size(39, 20)
+        Me.TextBox58.TabIndex = 87
+        Me.TextBox58.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'TextBox57
+        '
+        Me.TextBox57.Location = New System.Drawing.Point(318, 48)
+        Me.TextBox57.Name = "TextBox57"
+        Me.TextBox57.Size = New System.Drawing.Size(39, 20)
+        Me.TextBox57.TabIndex = 86
+        Me.TextBox57.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'TextBox56
+        '
+        Me.TextBox56.Location = New System.Drawing.Point(318, 22)
+        Me.TextBox56.Name = "TextBox56"
+        Me.TextBox56.Size = New System.Drawing.Size(39, 20)
+        Me.TextBox56.TabIndex = 85
+        Me.TextBox56.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'TextBox55
+        '
+        Me.TextBox55.Location = New System.Drawing.Point(467, 262)
+        Me.TextBox55.Name = "TextBox55"
+        Me.TextBox55.Size = New System.Drawing.Size(77, 20)
+        Me.TextBox55.TabIndex = 84
+        Me.TextBox55.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
         'Button6
         '
         Me.Button6.Location = New System.Drawing.Point(296, 153)
@@ -2619,6 +2655,7 @@ Partial Class Form1
         Me.Button6.TabIndex = 83
         Me.Button6.Text = "Button6"
         Me.Button6.UseVisualStyleBackColor = True
+        Me.Button6.Visible = False
         '
         'TextBox54
         '
@@ -2724,9 +2761,9 @@ Partial Class Form1
         Me.Label183.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label183.Location = New System.Drawing.Point(12, 218)
         Me.Label183.Name = "Label183"
-        Me.Label183.Size = New System.Drawing.Size(354, 16)
+        Me.Label183.Size = New System.Drawing.Size(353, 16)
         Me.Label183.TabIndex = 70
-        Me.Label183.Text = "Maximum bending strength lateral loads, simple supported"
+        Me.Label183.Text = "Maximum bending strength lateral loads, simply supported"
         '
         'Label190
         '
@@ -2738,25 +2775,15 @@ Partial Class Form1
         Me.Label190.TabIndex = 51
         Me.Label190.Text = "[cm]"
         '
-        'Label191
-        '
-        Me.Label191.AutoSize = True
-        Me.Label191.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label191.Location = New System.Drawing.Point(425, 198)
-        Me.Label191.Name = "Label191"
-        Me.Label191.Size = New System.Drawing.Size(20, 16)
-        Me.Label191.TabIndex = 50
-        Me.Label191.Text = "re"
-        '
         'Label192
         '
         Me.Label192.AutoSize = True
         Me.Label192.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label192.Location = New System.Drawing.Point(14, 195)
         Me.Label192.Name = "Label192"
-        Me.Label192.Size = New System.Drawing.Size(288, 16)
+        Me.Label192.Size = New System.Drawing.Size(330, 16)
         Me.Label192.TabIndex = 49
-        Me.Label192.Text = "Beam colums buckling state limit stiffeners fixed"
+        Me.Label192.Text = "Beam colums buckling state limit stiffeners FIXED (<=1)"
         '
         'Label193
         '
@@ -2954,9 +2981,9 @@ Partial Class Form1
         Me.Label212.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label212.Location = New System.Drawing.Point(426, 44)
         Me.Label212.Name = "Label212"
-        Me.Label212.Size = New System.Drawing.Size(25, 16)
+        Me.Label212.Size = New System.Drawing.Size(42, 16)
         Me.Label212.TabIndex = 7
-        Me.Label212.Text = "σE"
+        Me.Label212.Text = "σE(C)"
         '
         'Label213
         '
@@ -3615,6 +3642,7 @@ Partial Class Form1
         'NumericUpDown10
         '
         Me.NumericUpDown10.DecimalPlaces = 1
+        Me.NumericUpDown10.Increment = New Decimal(New Integer() {1, 0, 0, 65536})
         Me.NumericUpDown10.Location = New System.Drawing.Point(467, 112)
         Me.NumericUpDown10.Name = "NumericUpDown10"
         Me.NumericUpDown10.Size = New System.Drawing.Size(78, 20)
@@ -3624,6 +3652,8 @@ Partial Class Form1
         '
         'NumericUpDown11
         '
+        Me.NumericUpDown11.DecimalPlaces = 1
+        Me.NumericUpDown11.Increment = New Decimal(New Integer() {1, 0, 0, 65536})
         Me.NumericUpDown11.Location = New System.Drawing.Point(468, 87)
         Me.NumericUpDown11.Name = "NumericUpDown11"
         Me.NumericUpDown11.Size = New System.Drawing.Size(78, 20)
@@ -3684,6 +3714,7 @@ Partial Class Form1
         'NumericUpDown15
         '
         Me.NumericUpDown15.DecimalPlaces = 1
+        Me.NumericUpDown15.Increment = New Decimal(New Integer() {1, 0, 0, 65536})
         Me.NumericUpDown15.Location = New System.Drawing.Point(468, 62)
         Me.NumericUpDown15.Name = "NumericUpDown15"
         Me.NumericUpDown15.Size = New System.Drawing.Size(78, 20)
@@ -3694,6 +3725,7 @@ Partial Class Form1
         'NumericUpDown17
         '
         Me.NumericUpDown17.DecimalPlaces = 2
+        Me.NumericUpDown17.Increment = New Decimal(New Integer() {1, 0, 0, 65536})
         Me.NumericUpDown17.Location = New System.Drawing.Point(468, 37)
         Me.NumericUpDown17.Name = "NumericUpDown17"
         Me.NumericUpDown17.Size = New System.Drawing.Size(78, 20)
@@ -3703,6 +3735,8 @@ Partial Class Form1
         '
         'NumericUpDown18
         '
+        Me.NumericUpDown18.DecimalPlaces = 1
+        Me.NumericUpDown18.Increment = New Decimal(New Integer() {1, 0, 0, 65536})
         Me.NumericUpDown18.Location = New System.Drawing.Point(468, 12)
         Me.NumericUpDown18.Maximum = New Decimal(New Integer() {200000, 0, 0, 0})
         Me.NumericUpDown18.Name = "NumericUpDown18"
@@ -3740,14 +3774,6 @@ Partial Class Form1
         Me.Label144.Size = New System.Drawing.Size(129, 16)
         Me.Label144.TabIndex = 0
         Me.Label144.Text = "Stiffener flange width"
-        '
-        'TextBox55
-        '
-        Me.TextBox55.Location = New System.Drawing.Point(468, 261)
-        Me.TextBox55.Name = "TextBox55"
-        Me.TextBox55.Size = New System.Drawing.Size(77, 20)
-        Me.TextBox55.TabIndex = 84
-        Me.TextBox55.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Form1
         '
@@ -4084,7 +4110,6 @@ Partial Class Form1
     Friend WithEvents Label180 As Label
     Friend WithEvents GroupBox17 As GroupBox
     Friend WithEvents Label190 As Label
-    Friend WithEvents Label191 As Label
     Friend WithEvents Label192 As Label
     Friend WithEvents Label193 As Label
     Friend WithEvents Label194 As Label
@@ -4143,4 +4168,7 @@ Partial Class Form1
     Friend WithEvents NumericUpDown19 As NumericUpDown
     Friend WithEvents Label58 As Label
     Friend WithEvents TextBox55 As TextBox
+    Friend WithEvents TextBox58 As TextBox
+    Friend WithEvents TextBox57 As TextBox
+    Friend WithEvents TextBox56 As TextBox
 End Class

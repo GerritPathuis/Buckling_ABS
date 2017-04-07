@@ -56,7 +56,12 @@ Public Class Form1
 
     Public _σUx As Double   'Ultimate stress 
     Public _σUy As Double   'Ultimate stress 
+    Public _smw As Double      'Effective section modulus of longitidunal at flange
 
+    Public _A As Double     'Total plate + stiffener (in ABS called "A")
+    Public _Ast As Double   'Area stiffener (in ABS called "As")
+    Public _Ae As Double    'Effective area plate + area stiffener
+    Public _Aw As Double    'Effective breadth area plate + area stiffener
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Calc_sequence()
@@ -279,8 +284,8 @@ Public Class Form1
     End Sub
     'See page 45 of the ABS guide for Buckling
     Private Sub Calc_chaper13_1()
-        Dim dw, tw, bf, tf, b1, Ass, A_tot, Ae, Zep, Aw, Zwp As Double
-        Dim smw As Double
+        Dim dw, tw, bf, tf, b1, Zep, Zwp As Double
+
         bf = NumericUpDown18.Value
         tf = NumericUpDown15.Value
         b1 = NumericUpDown17.Value
@@ -288,52 +293,61 @@ Public Class Form1
         tw = NumericUpDown10.Value
 
         _se = _S     'Page 32, Buckling state limit is satisfied
-        _sw = _se     'Effective breadth figure 8.
+        _sw = _se    'Effective breadth figure 8.
 
-        Ass = dw * tw + bf * tf
-        Ae = _se * _t + Ass
-        A_tot = Ass + Ae
+        _Ast = dw * tw + bf * tf    'Area stiffener
+        _Ae = _Ast + _se * _t       'Area stiffener + Area plate
+        _Aw = _Ast + _sw * _t       'Area stiffener + Area plate
+        _A = _Ast + _S * _t         'Area stiffener + Area plate
 
-        Zep = (0.5 * ((_t + dw) * dw * tw) + (0.5 * _t + dw + 0.5 * tf) * bf * tf) / Ae
+        Zep = (0.5 * ((_t + dw) * dw * tw) + (0.5 * _t + dw + 0.5 * tf) * bf * tf) / _Ae
 
         _Ie = _t ^ 3 * _se / 12
         _Ie += dw ^ 3 * tw / 12
         _Ie += tf ^ 3 * bf / 12
         _Ie += 0.25 * (_t + dw) ^ 2 * dw * tw
         _Ie += bf * tf * (0.5 * _t + dw + 0.5 * tf) ^ 2
-        _Ie -= Ae * Zep ^ 2
+        _Ie -= _Ae * Zep ^ 2
 
-        _re = Sqrt(_Ie / Ae)
-        Aw = _sw * _t + Ass
-        Zwp = (0.5 * ((_t + dw) * dw * tw) + (0.5 * _t + dw + 0.5 * tf) * bf * tf) / Aw
+        _re = Sqrt(_Ie / _Ae)
+
+        Zwp = (0.5 * ((_t + dw) * dw * tw) + (0.5 * _t + dw + 0.5 * tf) * bf * tf) / _Aw
 
         _Iw = _t ^ 3 * _se / 12
         _Iw += dw ^ 3 * tw / 12
         _Iw += tf ^ 3 * bf / 12
         _Iw += 0.25 * (_t + dw) ^ 2 * dw * tw
         _Iw += bf * tf * (0.5 * _t + dw + 0.5 * tf) ^ 2
-        _Iw -= Ae * Zep ^ 2
+        _Iw -= _Ae * Zep ^ 2
 
-        smw = _Iw / ((0.5 * _t + dw + tf) - Zwp)
+        _smw = _Iw / ((0.5 * _t + dw + tf) - Zwp)
 
         TextBox32.Text = Round(_se, 1).ToString
         TextBox33.Text = Round(_sw, 1).ToString
-        TextBox34.Text = Round(Ass, 1).ToString
-        TextBox35.Text = Round(A_tot, 1).ToString
-        TextBox36.Text = Round(Ae, 1).ToString
-        TextBox37.Text = Round(Aw, 1).ToString
+        TextBox34.Text = Round(_Ast, 1).ToString
+        'TextBox35.Text = Round(A_tot, 1).ToString
+        TextBox36.Text = Round(_Ae, 1).ToString
+        TextBox37.Text = Round(_Aw, 1).ToString
         TextBox38.Text = Round(Zep, 1).ToString
         TextBox39.Text = Round(_Ie, 1).ToString
         TextBox40.Text = Round(_re, 1).ToString
         TextBox41.Text = Round(Zwp, 1).ToString
         TextBox42.Text = Round(_Iw, 1).ToString
-        TextBox43.Text = Round(smw, 1).ToString
+        TextBox43.Text = Round(_smw, 1).ToString
     End Sub
     'See page 32 of the ABS guide for Buckling
     Private Sub Calc_chaper5_1()
-        Dim σa, σE, σCA, Mf, σbf, Cm As Double
+        Dim σa, σEC, σCA, Cm As Double
+        Dim σb, M As Double
         Dim Cy, Cx, Cxy As Double
+        Dim bsl_crit As Double  'Buckling state limit criterium  
 
+        '-----------Maximum bending moment-----------
+        M = _q * _S * _L ^ 2 / 12
+        σb = M / _smw
+
+        '-------- Cx, Cy and Cxy------------
+        Cxy = Sqrt(1 - (_τ / _τ0) ^ 2)
         Cy = 0.5 * _φ * (_σymax / _σUy) + Sqrt(1 - (1 - 0.25 * _φ ^ 2) * (_σymax / _σUy) ^ 2)
 
         If _β > 1 Then
@@ -342,20 +356,42 @@ Public Class Form1
             Cx = 1
         End If
 
-        Cxy = Sqrt(1 - (_τ / _τ0) ^ 2)
+        '------------- σE(C)----------
+        σEC = PI ^ 2 * _E * _re ^ 2 / _L ^ 2
 
-        TextBox44.Text = Round(σa, 1).ToString
-        TextBox45.Text = Round(σE, 1).ToString
+        '-------------σCA-------------
+        If (σEC < _Pr * _σ0) Then
+            σCA = σEC
+        Else
+            σCA = _σ0 * (1 - _Pr * (1 - _Pr) * (_σ0 / σEC))
+        End If
+
+        '-----------P----------------
+        σa = _σax
+        Cm = 0.75
+
+        bsl_crit = σa / (_η * σCA * (_Ae / _A))
+        bsl_crit += Cm * σb / (_η * _σ0 * (1 - σa / (_η * σEC)))
+
+        TextBox44.Text = Round(σa, 0).ToString
+        TextBox45.Text = Round(σEC, 0).ToString
         TextBox46.Text = Round(_Pr, 1).ToString
-        TextBox47.Text = Round(σCA, 1).ToString
-        TextBox48.Text = Round(Mf, 1).ToString
-        TextBox49.Text = Round(σbf, 1).ToString
-        TextBox50.Text = Round(Cm, 1).ToString
+        TextBox47.Text = Round(σCA, 0).ToString
+        TextBox48.Text = Round(M, 0).ToString
+        TextBox49.Text = Round(σb, 0).ToString
+        TextBox50.Text = Round(Cm, 2).ToString
         TextBox51.Text = Round(_η, 1).ToString
-        TextBox52.Text = Round(_re, 1).ToString
-        TextBox53.Text = Round(_re, 1).ToString
-        TextBox54.Text = Round(_re, 1).ToString
-        TextBox55.Text = Round(_re, 1).ToString
+        TextBox52.Text = Round(bsl_crit, 2).ToString
+        'TextBox53.Text = Round(_re, 1).ToString
+        'TextBox54.Text = Round(_re, 1).ToString
+        'TextBox55.Text = Round(_re, 1).ToString
+
+        TextBox56.Text = Round(Cx, 1).ToString
+        TextBox57.Text = Round(Cy, 1).ToString
+        TextBox58.Text = Round(Cxy, 1).ToString
+
+        '----- checks-----------
+        TextBox52.BackColor = IIf(bsl_crit <= 1, Color.LightGreen, Color.Coral)
     End Sub
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
         Calc_sequence()
@@ -364,7 +400,7 @@ Public Class Form1
         Calc_sequence()
     End Sub
 
-    Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
+    Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click, NumericUpDown18.ValueChanged, NumericUpDown17.ValueChanged, NumericUpDown15.ValueChanged, NumericUpDown11.ValueChanged, NumericUpDown10.ValueChanged
         Calc_sequence()
     End Sub
 
