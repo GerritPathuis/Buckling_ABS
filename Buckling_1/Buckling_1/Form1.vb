@@ -393,6 +393,40 @@ Public Class Form1
         '----- checks-----------
         TextBox52.BackColor = IIf(bsl_crit <= 1, Color.LightGreen, Color.Coral)
     End Sub
+    'See page 35 of the ABS guide for Buckling
+    Private Sub Calc_chaper5_3()
+        Dim σcL, Ixf, Iz, Iy, Γ, Co, uf, m, n, Io As Double
+
+
+        uf = 1
+
+        '--------------
+        n = 1
+        σcL = PI ^ 2 * _E * (n / _α + _α / n) ^ 2 * (_t / _S) ^ 2
+        σcL /= (12 * (1 - _v ^ 2))
+
+
+        Ixf = 1
+
+        Γ = 1
+        Co = 1
+
+        m = 1
+        Io = 1
+
+
+        TextBox59.Text = Round(σcL, 0).ToString
+        TextBox60.Text = Round(Ixf, 2).ToString
+        TextBox61.Text = Round(Γ, 1).ToString
+        TextBox62.Text = Round(Co, 2).ToString
+        TextBox63.Text = Round(uf, 1).ToString
+        TextBox64.Text = Round(m, 1).ToString
+        TextBox65.Text = Round(Iy, 1).ToString
+        TextBox66.Text = Round(Iz, 1).ToString
+        TextBox67.Text = Round(Io, 1).ToString
+        TextBox68.Text = Round(n, 1).ToString
+    End Sub
+
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
         Calc_sequence()
     End Sub
@@ -401,6 +435,10 @@ Public Class Form1
     End Sub
 
     Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click, NumericUpDown18.ValueChanged, NumericUpDown17.ValueChanged, NumericUpDown15.ValueChanged, NumericUpDown11.ValueChanged, NumericUpDown10.ValueChanged
+        Calc_sequence()
+    End Sub
+
+    Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click, TabPage9.Enter
         Calc_sequence()
     End Sub
 
@@ -418,6 +456,7 @@ Public Class Form1
         Calc_chaper3_5()
         Calc_chaper13_1()
         Calc_chaper5_1()
+        Calc_chaper5_3()
     End Sub
 
 End Class
