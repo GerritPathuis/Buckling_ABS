@@ -434,6 +434,7 @@ Public Class Form1
 
         '----- checks-----------
         TextBox52.BackColor = IIf(bsl_crit <= 1, Color.LightGreen, Color.Coral)
+        Button2.BackColor = IIf(bsl_crit <= 1, Color.LightGreen, Color.Coral)
     End Sub
     'See page 35 of the ABS guide for Buckling
     Private Sub Calc_chaper5_3()
@@ -489,6 +490,7 @@ Public Class Form1
         TextBox71.Text = Round(flex_crit, 2).ToString
         '----- checks-----------
         TextBox71.BackColor = IIf(flex_crit <= 1, Color.LightGreen, Color.Coral)
+        Button3.BackColor = IIf(flex_crit <= 1, Color.LightGreen, Color.Coral)
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
