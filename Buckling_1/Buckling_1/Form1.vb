@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports System.Text
 Imports System.Math
+Imports Word = Microsoft.Office.Interop.Word
 
 'Based on American Bureau of Shipping (ABS)
 'Guide for Buckling and Ultimate strength assessment for offshore structures
@@ -507,9 +508,12 @@ Public Class Form1
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
         Calc_sequence()
     End Sub
-
     Private Sub Button7_Click(sender As Object, e As EventArgs)
         Calc_sequence()
+    End Sub
+
+    Private Sub Button5_Click_1(sender As Object, e As EventArgs) Handles Button5.Click
+        Write_to_word()
     End Sub
 
     Private Sub Calc_sequence()
@@ -523,6 +527,212 @@ Public Class Form1
         Calc_chaper13_1()
         Calc_chaper5_1()
         Calc_chaper5_3()
+    End Sub
+
+    'Write data to Word 
+    'see https://msdn.microsoft.com/en-us/library/office/aa192495(v=office.11).aspx
+    Private Sub Write_to_word()
+        Dim oWord As Word.Application
+        Dim oDoc As Word.Document
+        Dim oTable As Word.Table
+        Dim oPara1, oPara2 As Word.Paragraph
+        ' Dim ufilename As String
+        Dim row As Integer
+
+        Try
+            oWord = CType(CreateObject("Word.Application"), Word.Application)
+            oWord.Visible = True
+            oDoc = oWord.Documents.Add
+
+            'Insert a paragraph at the beginning of the document. 
+            oPara1 = oDoc.Content.Paragraphs.Add
+            oPara1.Range.Text = "VTK Engineering"
+            oPara1.Range.Font.Name = "Arial"
+            oPara1.Range.Font.Size = 14
+            oPara1.Range.Font.Bold = CInt(True)
+            oPara1.Format.SpaceAfter = 1                '1 pt spacing after paragraph. 
+            oPara1.Range.InsertParagraphAfter()
+
+            oPara2 = oDoc.Content.Paragraphs.Add(oDoc.Bookmarks.Item("\endofdoc").Range)
+            oPara2.Format.SpaceAfter = 1
+            oPara2.Range.Font.Bold = CInt(False)
+            oPara2.Range.Text = "ABS Buckling and Utlimate Strength of stiffened panels" & vbCrLf
+            oPara2.Range.InsertParagraphAfter()
+
+            '----------------------------------------------
+            'Insert a table, fill it with data and change the column widths.
+            oTable = oDoc.Tables.Add(oDoc.Bookmarks.Item("\endofdoc").Range, 5, 2)
+            oTable.Range.ParagraphFormat.SpaceAfter = 1
+            oTable.Range.Font.Size = 10
+            oTable.Range.Font.Bold = CInt(False)
+            oTable.Rows.Item(1).Range.Font.Bold = CInt(True)
+
+            row = 1
+            oTable.Cell(row, 1).Range.Text = "Project Name"
+            oTable.Cell(row, 2).Range.Text = TextBox79.Text
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Item number"
+            oTable.Cell(row, 2).Range.Text = TextBox80.Text
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Filter type"
+            oTable.Cell(row, 2).Range.Text = TextBox81.Text
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Author"
+            oTable.Cell(row, 2).Range.Text = Environment.UserName
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Date"
+            oTable.Cell(row, 2).Range.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            row += 1
+            oTable.Columns(1).Width = oWord.InchesToPoints(2.5)   'Change width of columns 
+            oTable.Columns(2).Width = oWord.InchesToPoints(4)
+
+            oTable.Rows.Item(1).Range.Font.Bold = CInt(True)
+            oDoc.Bookmarks.Item("\endofdoc").Range.InsertParagraphAfter()
+
+
+            '------------------ Panel data----------------------
+            'Insert a table, fill it with data and change the column widths.
+            oTable = oDoc.Tables.Add(oDoc.Bookmarks.Item("\endofdoc").Range, 4, 3)
+            oTable.Range.ParagraphFormat.SpaceAfter = 1
+            oTable.Range.Font.Size = 9
+            oTable.Range.Font.Bold = CInt(False)
+            oTable.Rows.Item(1).Range.Font.Bold = CInt(True)
+            row = 1
+            oTable.Cell(row, 1).Range.Text = "Dimensions main plate (3/1.1)"
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Length of long plate edge (And Or stiffener length)"
+            oTable.Cell(row, 2).Range.Text = Round(NumericUpDown1.Value, 1).ToString
+            oTable.Cell(row, 3).Range.Text = "[cm]"
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Length of short plate edge"
+            oTable.Cell(row, 2).Range.Text = Round(NumericUpDown2.Value, 1).ToString
+            oTable.Cell(row, 3).Range.Text = "[cm]"
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Thickness of plating"
+            oTable.Cell(row, 2).Range.Text = Round(NumericUpDown3.Value, 1).ToString
+            oTable.Cell(row, 3).Range.Text = "[cm]"
+            row += 1
+
+            oTable.Columns(1).Width = oWord.InchesToPoints(4.0)   'Change width of columns
+            oTable.Columns(2).Width = oWord.InchesToPoints(1.1)
+            oTable.Columns(3).Width = oWord.InchesToPoints(0.8)
+            oTable.Rows.Item(1).Range.Font.Bold = CInt(True)
+            oDoc.Bookmarks.Item("\endofdoc").Range.InsertParagraphAfter()
+
+            '------------------ Material data----------------------
+            'Insert a table, fill it with data and change the column widths.
+            oTable = oDoc.Tables.Add(oDoc.Bookmarks.Item("\endofdoc").Range, 4, 3)
+            oTable.Range.ParagraphFormat.SpaceAfter = 1
+            oTable.Range.Font.Size = 9
+            oTable.Range.Font.Bold = CInt(False)
+            oTable.Rows.Item(1).Range.Font.Bold = CInt(True)
+            row = 1
+            oTable.Cell(row, 1).Range.Text = "Material properties"
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Specified Min yield point of plate"
+            oTable.Cell(row, 2).Range.Text = Round(NumericUpDown14.Value, 0).ToString
+            oTable.Cell(row, 3).Range.Text = "[N/cm2]"
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Modulus of elasticity"
+            oTable.Cell(row, 2).Range.Text = Round(NumericUpDown13.Value, 0).ToString
+            oTable.Cell(row, 3).Range.Text = "[N/cm2]"
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Poisson 's rate"
+            oTable.Cell(row, 2).Range.Text = Round(NumericUpDown12.Value, 0).ToString
+            oTable.Cell(row, 3).Range.Text = "[-]"
+            row += 1
+
+            oTable.Columns(1).Width = oWord.InchesToPoints(4.0)   'Change width of columns
+            oTable.Columns(2).Width = oWord.InchesToPoints(1.1)
+            oTable.Columns(3).Width = oWord.InchesToPoints(0.8)
+            oTable.Rows.Item(1).Range.Font.Bold = CInt(True)
+            oDoc.Bookmarks.Item("\endofdoc").Range.InsertParagraphAfter()
+
+
+            '------------------ Cooling disk data----------------------
+            'Insert a table, fill it with data and change the column widths.
+            oTable = oDoc.Tables.Add(oDoc.Bookmarks.Item("\endofdoc").Range, 7, 3)
+            oTable.Range.ParagraphFormat.SpaceAfter = 1
+            oTable.Range.Font.Size = 9
+            oTable.Range.Font.Bold = CInt(False)
+            oTable.Rows.Item(1).Range.Font.Bold = CInt(True)
+            row = 1
+            oTable.Cell(row, 1).Range.Text = "Applied loads(3 / 1.3) Figure 5"
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Uniform lateral pressure"
+            'oTable.Cell(row, 2).Range.Text = ComboBox2.Text
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Compression stress in longitudinal direction, σax"
+            oTable.Cell(row, 2).Range.Text = Round(NumericUpDown11.Value, 0).ToString
+            oTable.Cell(row, 3).Range.Text = "[N/cm2]"
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Compression stress in transverse direction, σay"
+            oTable.Cell(row, 2).Range.Text = Round(NumericUpDown9.Value, 0).ToString
+            oTable.Cell(row, 3).Range.Text = "[N/cm2]"
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Compression stress in transverse direction, σbx"
+            oTable.Cell(row, 2).Range.Text = Round(NumericUpDown7.Value, 0).ToString
+            oTable.Cell(row, 3).Range.Text = "[N/cm2]"
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "In-plane bending stress in transverse direction, σby"
+            oTable.Cell(row, 2).Range.Text = Round(NumericUpDown10.Value, 0).ToString
+            oTable.Cell(row, 3).Range.Text = "[N/cm2]"
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Edge shear stress	[N/cm2] τ"
+            oTable.Cell(row, 2).Range.Text = TextBox20.Text
+            oTable.Cell(row, 3).Range.Text = "[N/cm2]"
+
+            oTable.Columns(1).Width = oWord.InchesToPoints(4.0)   'Change width of columns
+            oTable.Columns(2).Width = oWord.InchesToPoints(1.1)
+            oTable.Columns(3).Width = oWord.InchesToPoints(0.8)
+            oTable.Rows.Item(1).Range.Font.Bold = CInt(True)
+            oDoc.Bookmarks.Item("\endofdoc").Range.InsertParagraphAfter()
+
+            '------------------ Results data----------------------
+            'Insert a table, fill it with data and change the column widths.
+            oTable = oDoc.Tables.Add(oDoc.Bookmarks.Item("\endofdoc").Range, 5, 3)
+            oTable.Range.ParagraphFormat.SpaceAfter = 1
+            oTable.Range.Font.Size = 9
+            oTable.Range.Font.Bold = CInt(False)
+            oTable.Rows.Item(1).Range.Font.Bold = CInt(True)
+            row = 1
+            oTable.Cell(row, 1).Range.Text = "Results"
+
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Ambient temperature"
+            oTable.Cell(row, 2).Range.Text = Round(NumericUpDown14.Value, 0).ToString
+            oTable.Cell(row, 3).Range.Text = "[°c]"
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Conducted power"
+            oTable.Cell(row, 2).Range.Text = TextBox5.Text
+            oTable.Cell(row, 3).Range.Text = "[W]"
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "To air transferred power"
+            oTable.Cell(row, 2).Range.Text = TextBox6.Text
+            oTable.Cell(row, 3).Range.Text = "[W]"
+            row += 1
+            oTable.Cell(row, 1).Range.Text = "Calculated shaft temperature"
+            oTable.Cell(row, 2).Range.Text = TextBox7.Text
+            oTable.Cell(row, 3).Range.Text = "[°c]"
+            row += 1
+
+            oTable.Columns(1).Width = oWord.InchesToPoints(2.0)   'Change width of columns
+            oTable.Columns(2).Width = oWord.InchesToPoints(2.1)
+            oTable.Columns(3).Width = oWord.InchesToPoints(0.8)
+            oTable.Rows.Item(1).Range.Font.Bold = CInt(True)
+            oDoc.Bookmarks.Item("\endofdoc").Range.InsertParagraphAfter()
+
+
+            'ufilename = "Fan_cooling_disk_report_" & TextBox9.Text & "_" & TextBox10.Text & DateTime.Now.ToString("_yyyy_MM_dd") & "(" & TextBox3.Text & ")" & ".docx"
+            'If Directory.Exists(dirpath_Rap) Then
+            '    ufilename = dirpath_Rap & ufilename
+            'Else
+            '    ufilename = dirpath_Home & ufilename
+            'End If
+            'oWord.ActiveDocument.SaveAs(ufilename.ToString)
+        Catch ex As Exception
+            'MessageBox.Show(ex.Message & "Problem storing file to" & dirpath_Rap)  ' Show the exception's message.
+        End Try
     End Sub
 
 End Class

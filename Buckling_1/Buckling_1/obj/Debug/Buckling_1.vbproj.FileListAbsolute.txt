@@ -31,3 +31,5 @@ C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.vbproj.G
 C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.exe
 C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.xml
 C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.pdb
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Interop.Office.dll
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.vbproj.ResolveComReference.cache
