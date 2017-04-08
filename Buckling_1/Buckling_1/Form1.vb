@@ -38,15 +38,27 @@ Public Class Form1
     Public _ky As Double            'Ratio of edge stresses Y direction
     Public _α As Double             'aspect ratio
 
-    '------- dimensions --------
+    '------- dimensions overall (figure1) --------
     Public _t As Double         'Plate thickness [mm]
     Public _S As Double         'Stiffeners distance [mm]
     Public _L As Double         'stiffeners length [mm]
     Public _LG As Double        'girder length [mm]
     Public _β As Double         'slenderness ratio [-]
 
+    '------- dimensions stiffener (figure 2)--------
+    Public _dw As Double
+    Public _tw As Double
+    Public _bf As Double
+    Public _tf As Double
+    Public _b1 As Double
+
+    Public _y0 As Double        'Centriod to center line web [cm]
+    Public _z0 As Double        'Centroid to plate [cm]
+
     Public _Iw As Double    'Moment of inertia of stiffener and effective plating sw
     Public _Ie As Double    'Moment Of inertia Of stiffener And effective plating se
+    Public _Iy As Double    'Moment of Inertia of stiffener, trough centroid, excl plating [cm4]
+    Public _Iz As Double    'Moment of Inertia of stiffener, trough centroid, excl plating [cm4]
 
     Public _se As Double    'Plate effective width (plate buckling limit must be satiesfied)
     Public _sw As Double    'Plate effective breadth
@@ -58,8 +70,8 @@ Public Class Form1
     Public _σUy As Double   'Ultimate stress 
     Public _smw As Double      'Effective section modulus of longitidunal at flange
 
-    Public _A As Double     'Total plate + stiffener (in ABS called "A")
-    Public _Ast As Double   'Area stiffener (in ABS called "As")
+    Public _A As Double     'Total plate + stiffener (in ABS named "A")
+    Public _As As Double    'Area stiffener (in ABS called "As")
     Public _Ae As Double    'Effective area plate + area stiffener
     Public _Aw As Double    'Effective breadth area plate + area stiffener
 
@@ -68,12 +80,45 @@ Public Class Form1
     End Sub
 
     Private Sub Read_dimensions()
+
         _L = NumericUpDown1.Value   'Length
         _S = NumericUpDown2.Value   'stiffener distance
         _t = NumericUpDown3.Value   'plate thicknes
 
         _α = _L / _S                 'aspect ratio
         TextBox11.Text = Round(_α, 3).ToString
+
+        _bf = NumericUpDown18.Value
+        _tf = NumericUpDown15.Value
+        _b1 = NumericUpDown17.Value
+        _dw = NumericUpDown11.Value
+        _tw = NumericUpDown10.Value
+
+        _As = _dw * _tw + _bf * _tf    'Area stiffener
+
+        _y0 = Abs((_b1 - 0.5 * _bf) * _bf * _tf / _As)
+        _z0 = (0.5 * _dw ^ 2 * _tw + (_dw + 0.5 * _tf) * _bf * _tf) / _As
+
+        _Iy = _dw ^ 3 * _tw / 12
+        _Iy += _tf ^ 3 * _bf / 12
+        _Iy += 0.25 * _dw ^ 3 * _tw
+        _Iy += _bf * _tf * (_dw + 0.5 * _tf) ^ 2
+        _Iy -= _As * _z0 ^ 2
+
+        _Iz = _tw ^ 3 * _dw / 12
+        _Iz += _bf ^ 3 * _tf / 12
+        _Iz += _bf * _tf * (_b1 - 0.5 * _bf) ^ 2
+        _Iz -= _As * _z0 ^ 2
+
+        TextBox72.Text = Round(_As, 2).ToString
+        TextBox73.Text = Round(_y0, 2).ToString
+        TextBox74.Text = Round(_z0, 2).ToString
+
+        TextBox75.Text = Round(_Iy, 0).ToString
+        TextBox65.Text = Round(_Iy, 0).ToString
+
+        TextBox76.Text = Round(_Iz, 0).ToString
+        TextBox66.Text = Round(_Iz, 0).ToString
     End Sub
     Private Sub Read_loads()
         _q = NumericUpDown6.Value   'Uniform lateral load [N/cm2]
@@ -106,6 +151,7 @@ Public Class Form1
         TextBox20.Text = Round(_kx, 2).ToString("0.00")
         TextBox10.Text = Round(_ky, 2).ToString("0.00")
         TextBox21.Text = Round(_ky, 2).ToString("0.00")
+        TextBox78.Text = Round(_q * 100, 1).ToString("0.0")    '[mbar]
     End Sub
     Private Sub Read_properties()
         _σ0 = NumericUpDown14.Value
@@ -269,6 +315,8 @@ Public Class Form1
         TextBox27.Text = Round(_σUy, 0).ToString
         TextBox28.Text = Round(_φ, 2).ToString
         TextBox29.Text = Round(strength_criterium, 4).ToString
+
+        TextBox29.BackColor = IIf(strength_criterium <= 1, Color.LightGreen, Color.Coral)
     End Sub
     'See page 31 of the ABS guide for Buckling
     Private Sub Calc_chaper3_5()
@@ -284,47 +332,44 @@ Public Class Form1
     End Sub
     'See page 45 of the ABS guide for Buckling
     Private Sub Calc_chaper13_1()
-        Dim dw, tw, bf, tf, b1, Zep, Zwp As Double
-
-        bf = NumericUpDown18.Value
-        tf = NumericUpDown15.Value
-        b1 = NumericUpDown17.Value
-        dw = NumericUpDown11.Value
-        tw = NumericUpDown10.Value
+        Dim Zep, Zwp As Double
 
         _se = _S     'Page 32, Buckling state limit is satisfied
         _sw = _se    'Effective breadth figure 8.
 
-        _Ast = dw * tw + bf * tf    'Area stiffener
-        _Ae = _Ast + _se * _t       'Area stiffener + Area plate
-        _Aw = _Ast + _sw * _t       'Area stiffener + Area plate
-        _A = _Ast + _S * _t         'Area stiffener + Area plate
+        _Ae = _As + _se * _t       'Area stiffener + Area plate
+        _Aw = _As + _sw * _t       'Area stiffener + Area plate
+        _A = _As + _S * _t         'Area stiffener + Area plate
 
-        Zep = (0.5 * ((_t + dw) * dw * tw) + (0.5 * _t + dw + 0.5 * tf) * bf * tf) / _Ae
+        Zep = 0.5 * (_t + _dw) * _dw * _tw
+        Zep += (0.5 * _t + _dw + 0.5 * _tf) * _bf * _tf
+        Zep /= _Ae
 
         _Ie = _t ^ 3 * _se / 12
-        _Ie += dw ^ 3 * tw / 12
-        _Ie += tf ^ 3 * bf / 12
-        _Ie += 0.25 * (_t + dw) ^ 2 * dw * tw
-        _Ie += bf * tf * (0.5 * _t + dw + 0.5 * tf) ^ 2
+        _Ie += _dw ^ 3 * _tw / 12
+        _Ie += _tf ^ 3 * _bf / 12
+        _Ie += 0.25 * (_t + _dw) ^ 2 * _dw * _tw
+        _Ie += _bf * _tf * (0.5 * _t + _dw + 0.5 * _tf) ^ 2
         _Ie -= _Ae * Zep ^ 2
 
         _re = Sqrt(_Ie / _Ae)
 
-        Zwp = (0.5 * ((_t + dw) * dw * tw) + (0.5 * _t + dw + 0.5 * tf) * bf * tf) / _Aw
+        Zwp = 0.5 * (_t + _dw) * _dw * _tw
+        Zwp += 0.5 * _t + _dw + 0.5 * _tf * _bf * _tf
+        Zwp /= _Aw
 
         _Iw = _t ^ 3 * _se / 12
-        _Iw += dw ^ 3 * tw / 12
-        _Iw += tf ^ 3 * bf / 12
-        _Iw += 0.25 * (_t + dw) ^ 2 * dw * tw
-        _Iw += bf * tf * (0.5 * _t + dw + 0.5 * tf) ^ 2
+        _Iw += _dw ^ 3 * _tw / 12
+        _Iw += _tf ^ 3 * _bf / 12
+        _Iw += 0.25 * (_t + _dw) ^ 2 * _dw * _tw
+        _Iw += _bf * _tf * (0.5 * _t + _dw + 0.5 * _tf) ^ 2
         _Iw -= _Ae * Zep ^ 2
 
-        _smw = _Iw / ((0.5 * _t + dw + tf) - Zwp)
+        _smw = _Iw / ((0.5 * _t + _dw + _tf) - Zwp)
 
         TextBox32.Text = Round(_se, 1).ToString
         TextBox33.Text = Round(_sw, 1).ToString
-        TextBox34.Text = Round(_Ast, 1).ToString
+        TextBox34.Text = Round(_As, 1).ToString
         'TextBox35.Text = Round(A_tot, 1).ToString
         TextBox36.Text = Round(_Ae, 1).ToString
         TextBox37.Text = Round(_Aw, 1).ToString
@@ -382,9 +427,6 @@ Public Class Form1
         TextBox50.Text = Round(Cm, 2).ToString
         TextBox51.Text = Round(_η, 1).ToString
         TextBox52.Text = Round(bsl_crit, 2).ToString
-        'TextBox53.Text = Round(_re, 1).ToString
-        'TextBox54.Text = Round(_re, 1).ToString
-        'TextBox55.Text = Round(_re, 1).ToString
 
         TextBox56.Text = Round(Cx, 1).ToString
         TextBox57.Text = Round(Cy, 1).ToString
@@ -395,42 +437,64 @@ Public Class Form1
     End Sub
     'See page 35 of the ABS guide for Buckling
     Private Sub Calc_chaper5_3()
-        Dim σcL, Ixf, Iz, Iy, Γ, Co, uf, m, n, Io As Double
+        Dim σa, σcL, σET, σCT, Ixf, Γ, Co, uf, m, n, Io, K, flex_crit As Double
 
 
-        uf = 1
+        uf = 1 - 2 * _b1 / _bf                  'Unsymatrical factor
+        m = 1 - uf * (0.7 - 0.1 * _dw / _bf)
 
         '--------------
-        n = 1
+        n = 1       'No half waves
+
         σcL = PI ^ 2 * _E * (n / _α + _α / n) ^ 2 * (_t / _S) ^ 2
         σcL /= (12 * (1 - _v ^ 2))
 
 
-        Ixf = 1
+        Ixf = _tf * _bf ^ 3 / 12 * (1.0 + 3.0 * uf ^ 2 * _dw * _tw / _As)
 
-        Γ = 1
-        Co = 1
+        Γ = m * Ixf * _dw ^ 2 + _dw ^ 3 * _tw ^ 2 / 36.0
 
-        m = 1
-        Io = 1
+        Co = _E * _t ^ 3 / (3.0 * _S)
 
+        Io = _Iy + m * _Iz + _As * (_y0 ^ 2 + _z0 ^ 2)
+
+        K = (_bf * _tf ^ 3 + _dw * _tw ^ 3) / 3
+
+        σET = K / 2.6 + (n * PI / _L) ^ 2 * Γ
+        σET += Co / _E * (_L / (n * PI)) ^ 2
+        σET *= _E
+        σET /= Io + Co / σcL * (_L / (n * PI)) ^ 2
+
+        If σET <= _Pr * _σ0 Then
+            σCT = σET
+        Else
+            σCT = _σ0 * (1 - _Pr * (1 - _Pr) * _σ0 / σET)
+        End If
+
+        σa = _σax
+
+        flex_crit = σa / (_η * σCT)
 
         TextBox59.Text = Round(σcL, 0).ToString
         TextBox60.Text = Round(Ixf, 2).ToString
         TextBox61.Text = Round(Γ, 1).ToString
-        TextBox62.Text = Round(Co, 2).ToString
+        TextBox62.Text = Round(Co, 0).ToString
         TextBox63.Text = Round(uf, 1).ToString
         TextBox64.Text = Round(m, 1).ToString
-        TextBox65.Text = Round(Iy, 1).ToString
-        TextBox66.Text = Round(Iz, 1).ToString
         TextBox67.Text = Round(Io, 1).ToString
         TextBox68.Text = Round(n, 1).ToString
+        TextBox77.Text = Round(K, 1).ToString
+        TextBox69.Text = Round(σET, 0).ToString
+        TextBox70.Text = Round(σCT, 0).ToString
+        TextBox71.Text = Round(flex_crit, 2).ToString
+        '----- checks-----------
+        TextBox71.BackColor = IIf(flex_crit <= 1, Color.LightGreen, Color.Coral)
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
         Calc_sequence()
     End Sub
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click, NumericUpDown9.Enter, NumericUpDown8.Enter, NumericUpDown7.Enter, NumericUpDown6.Enter, NumericUpDown5.Enter, NumericUpDown4.Enter, NumericUpDown9.ValueChanged, NumericUpDown8.ValueChanged, NumericUpDown7.ValueChanged, NumericUpDown6.ValueChanged, NumericUpDown5.ValueChanged, NumericUpDown4.ValueChanged
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles NumericUpDown3.ValueChanged, NumericUpDown2.ValueChanged, NumericUpDown1.ValueChanged, NumericUpDown9.ValueChanged, NumericUpDown8.ValueChanged, NumericUpDown7.ValueChanged, NumericUpDown6.ValueChanged, NumericUpDown5.ValueChanged, NumericUpDown4.ValueChanged, NumericUpDown14.ValueChanged, NumericUpDown13.ValueChanged, NumericUpDown12.ValueChanged
         Calc_sequence()
     End Sub
 
@@ -438,11 +502,11 @@ Public Class Form1
         Calc_sequence()
     End Sub
 
-    Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click, TabPage9.Enter
+    Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
         Calc_sequence()
     End Sub
 
-    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click, GroupBox1.Enter, NumericUpDown3.Enter, NumericUpDown3.Click, NumericUpDown2.Enter, NumericUpDown2.Click, NumericUpDown1.Enter, NumericUpDown1.Click
+    Private Sub Button7_Click(sender As Object, e As EventArgs)
         Calc_sequence()
     End Sub
 
