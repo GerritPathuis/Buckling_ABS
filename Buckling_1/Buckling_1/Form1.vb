@@ -303,9 +303,6 @@ Public Class Form1
         strength_criterium += (_σymax / (_η * _σUx)) ^ 2
         strength_criterium += (_τ / (_η * τu)) ^ 2
 
-        Label112.Text = IIf(strength_criterium <= 1, "Plate buckling state limit  OK", "Plate buckling state limit NOK")
-        Label112.BackColor = IIf(strength_criterium <= 1, Color.LightGreen, Color.Coral)
-
         TextBox12.Text = Round(_β, 2).ToString
         TextBox19.Text = Round(_η, 2).ToString
         TextBox22.Text = Round(_η, 2).ToString
@@ -316,19 +313,25 @@ Public Class Form1
         TextBox27.Text = Round(_σUy, 0).ToString
         TextBox28.Text = Round(_φ, 2).ToString
         TextBox29.Text = Round(strength_criterium, 4).ToString
-
+        '----------- Check----------------------
         TextBox29.BackColor = IIf(strength_criterium <= 1, Color.LightGreen, Color.Coral)
     End Sub
-    'See page 31 of the ABS guide for Buckling
+    'See page 31 of the ABS guide for Buckling, Uniform Lateral pressure
     Private Sub Calc_chaper3_5()
-        Dim σe As Double
+        Dim σe, crit_lateral_press As Double
 
         σe = Sqrt(_σxmax ^ 2 - _σxmax * _σymax + _σymax ^ 2 + 3 * _τ ^ 2) 'Von misses
         _qu = _η * 4.0 * _σ0 * (_t / _S) ^ 2 * (1 + 1 / _α ^ 2) * Sqrt(1 - (σe / _σ0) ^ 2)
 
+        crit_lateral_press = _q / _qu
+
         TextBox31.Text = Round(σe, 1).ToString
         TextBox30.Text = Round(_qu, 3).ToString
-        TextBox30.BackColor = IIf(_qu >= _q, Color.LightGreen, Color.Coral)
+        TextBox82.Text = Round(_q, 3).ToString
+        TextBox83.Text = Round(crit_lateral_press, 2).ToString
+
+        TextBox83.BackColor = IIf(crit_lateral_press < 1, Color.LightGreen, Color.Coral)
+        Button7.BackColor = IIf(crit_lateral_press < 1, Color.LightGreen, Color.Coral)
         NumericUpDown6.BackColor = TextBox30.BackColor
     End Sub
     'See page 45 of the ABS guide for Buckling
@@ -638,7 +641,7 @@ Public Class Form1
             oTable.Cell(row, 3).Range.Text = "[N/cm2]"
             row += 1
             oTable.Cell(row, 1).Range.Text = "Poisson 's rate"
-            oTable.Cell(row, 2).Range.Text = Round(NumericUpDown12.Value, 0).ToString
+            oTable.Cell(row, 2).Range.Text = Round(NumericUpDown12.Value, 2).ToString
             oTable.Cell(row, 3).Range.Text = "[-]"
             row += 1
 
@@ -649,7 +652,7 @@ Public Class Form1
             oDoc.Bookmarks.Item("\endofdoc").Range.InsertParagraphAfter()
 
 
-            '------------------ Cooling disk data----------------------
+            '------------------ Loads data----------------------
             'Insert a table, fill it with data and change the column widths.
             oTable = oDoc.Tables.Add(oDoc.Bookmarks.Item("\endofdoc").Range, 7, 3)
             oTable.Range.ParagraphFormat.SpaceAfter = 1
@@ -699,25 +702,25 @@ Public Class Form1
             oTable.Cell(row, 1).Range.Text = "Results"
 
             row += 1
-            oTable.Cell(row, 1).Range.Text = "Ambient temperature"
-            oTable.Cell(row, 2).Range.Text = Round(NumericUpDown14.Value, 0).ToString
-            oTable.Cell(row, 3).Range.Text = "[°c]"
+            oTable.Cell(row, 1).Range.Text = "Plate Ultimate Strength under combined in-plane stresses (<=1)"
+            oTable.Cell(row, 2).Range.Text = TextBox29.Text
+            oTable.Cell(row, 3).Range.Text = "[-]"
             row += 1
-            oTable.Cell(row, 1).Range.Text = "Conducted power"
-            oTable.Cell(row, 2).Range.Text = TextBox5.Text
-            oTable.Cell(row, 3).Range.Text = "[W]"
+            oTable.Cell(row, 1).Range.Text = "Uniform Lateral Pressure /Ultimate strength (<=1)"
+            oTable.Cell(row, 2).Range.Text = TextBox83.Text
+            oTable.Cell(row, 3).Range.Text = "[-]"
             row += 1
-            oTable.Cell(row, 1).Range.Text = "To air transferred power"
-            oTable.Cell(row, 2).Range.Text = TextBox6.Text
-            oTable.Cell(row, 3).Range.Text = "[W]"
+            oTable.Cell(row, 1).Range.Text = "Beam colums buckling state limit stiffeners FIXED (<=1)"
+            oTable.Cell(row, 2).Range.Text = TextBox52.Text
+            oTable.Cell(row, 3).Range.Text = "[-]"
             row += 1
-            oTable.Cell(row, 1).Range.Text = "Calculated shaft temperature"
-            oTable.Cell(row, 2).Range.Text = TextBox7.Text
-            oTable.Cell(row, 3).Range.Text = "[°c]"
+            oTable.Cell(row, 1).Range.Text = "Flexural-torsional buckling state limit criterium (<=1)"
+            oTable.Cell(row, 2).Range.Text = TextBox71.Text
+            oTable.Cell(row, 3).Range.Text = "[-]"
             row += 1
 
-            oTable.Columns(1).Width = oWord.InchesToPoints(2.0)   'Change width of columns
-            oTable.Columns(2).Width = oWord.InchesToPoints(2.1)
+            oTable.Columns(1).Width = oWord.InchesToPoints(4.0)   'Change width of columns
+            oTable.Columns(2).Width = oWord.InchesToPoints(1.1)
             oTable.Columns(3).Width = oWord.InchesToPoints(0.8)
             oTable.Rows.Item(1).Range.Font.Bold = CInt(True)
             oDoc.Bookmarks.Item("\endofdoc").Range.InsertParagraphAfter()
