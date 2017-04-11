@@ -52,6 +52,7 @@ Public Class Form1
     Public _bf As Double
     Public _tf As Double
     Public _b1 As Double
+    Public _b2 As Double
 
     Public _y0 As Double        'Centriod to center line web [cm]
     Public _z0 As Double        'Centroid to plate [cm]
@@ -76,6 +77,8 @@ Public Class Form1
     Public _Ae As Double    'Effective area plate + area stiffener
     Public _Aw As Double    'Effective breadth area plate + area stiffener
 
+    Dim all_textbox As New List(Of Control)
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Calc_sequence()
     End Sub
@@ -95,7 +98,34 @@ Public Class Form1
         _dw = NumericUpDown11.Value 'Web depth
         _tw = NumericUpDown10.Value
 
-        _As = _dw * _tw + _bf * _tf    'Area stiffener
+        Select Case True
+            Case RadioButton9.Checked   'Angle iron
+                _b1 = _tw / 2
+                '---- minimale breedte flange 20mm---
+                If _bf <= 2 Then
+                    _bf = 2
+                End If
+                If _b2 <= _b1 Then
+                    _b2 = _b1
+                End If
+            Case RadioButton10.Checked  'Tee iron
+                '---- minimale breedte flange 40mm---
+                If _bf <= 4 Then
+                    _bf = 4
+                End If
+                _b1 = _bf / 2
+            Case RadioButton11.Checked  'Flat bar
+                _b1 = _tw / 2
+                _bf = _tw
+
+        End Select
+        NumericUpDown17.Value = CDec(_b1)
+        NumericUpDown18.Value = CDec(_bf)
+
+        _b2 = _bf - _b1 - _tw / 2       'Larger outstanding flange
+        TextBox90.Text = Round(_b2, 2).ToString("0.00")
+
+        _As = _dw * _tw + _bf * _tf     'Area stiffener
 
         _y0 = Abs((_b1 - 0.5 * _bf) * _bf * _tf / _As)
         _z0 = (0.5 * _dw ^ 2 * _tw + (_dw + 0.5 * _tf) * _bf * _tf) / _As
@@ -120,6 +150,7 @@ Public Class Form1
 
         TextBox76.Text = Round(_Iz, 0).ToString
         TextBox66.Text = Round(_Iz, 0).ToString
+
     End Sub
     Private Sub Read_loads()
         _q = NumericUpDown6.Value   'Uniform lateral load [N/cm2]
@@ -153,6 +184,9 @@ Public Class Form1
         TextBox10.Text = Round(_ky, 2).ToString("0.00")
         TextBox21.Text = Round(_ky, 2).ToString("0.00")
         TextBox78.Text = Round(_q * 100, 1).ToString("0.0")    '[mbar]
+
+        TextBox84.Text = Round(_σax / 100, 1).ToString         '[N/mm2]
+        TextBox85.Text = Round(_σay / 100, 1).ToString         '[N/mm2]
     End Sub
     Private Sub Read_properties()
         _σ0 = NumericUpDown14.Value
@@ -190,6 +224,10 @@ Public Class Form1
         TextBox2.Text = Round(_τC, 0).ToString
         TextBox3.Text = Round(Ks, 2).ToString
         TextBox4.Text = Round(_τ0, 0).ToString
+
+        '----------- Check----------------------
+        TextBox1.BackColor = CType(IIf(τE > _τ, Color.LightGreen, Color.Coral), Color)
+        TextBox2.BackColor = CType(IIf(_τC > _τ, Color.LightGreen, Color.Coral), Color)
     End Sub
     'See page 29 of the ABS guide for Buckling
     Private Sub Calc_chaper3_1_2()
@@ -240,6 +278,9 @@ Public Class Form1
         TextBox18.Text = Round(Ksx_long, 2).ToString("0.00")
         TextBox13.Text = Round(σEix, 0).ToString
         TextBox14.Text = Round(σCix, 0).ToString
+        '----------- Check----------------------
+        TextBox13.BackColor = CType(IIf(σEix > _σxmax, Color.LightGreen, Color.Coral), Color)
+        TextBox14.BackColor = CType(IIf(σCix > _σxmax, Color.LightGreen, Color.Coral), Color)
 
         '============== Y DIRECTION============================================
         '==============Loading applied along short edge========================
@@ -262,6 +303,9 @@ Public Class Form1
         TextBox17.Text = Round(Ksy_short, 2).ToString("0.00")
         TextBox16.Text = Round(σEiy, 0).ToString
         TextBox15.Text = Round(σCiy, 0).ToString
+        '----------- Check----------------------
+        TextBox16.BackColor = CType(IIf(σEiy > _σymax, Color.LightGreen, Color.Coral), Color)
+        TextBox15.BackColor = CType(IIf(σCiy > _σymax, Color.LightGreen, Color.Coral), Color)
     End Sub
 
     'See page 30 of the ABS guide for Buckling
@@ -331,7 +375,6 @@ Public Class Form1
         TextBox83.Text = Round(crit_lateral_press, 2).ToString
 
         TextBox83.BackColor = CType(IIf(crit_lateral_press < 1, Color.LightGreen, Color.Coral), Color)
-        Button7.BackColor = CType(IIf(crit_lateral_press < 1, Color.LightGreen, Color.Coral), Color)
         NumericUpDown6.BackColor = TextBox30.BackColor
     End Sub
     'See page 45 of the ABS guide for Buckling
@@ -438,7 +481,6 @@ Public Class Form1
 
         '----- checks-----------
         TextBox52.BackColor = CType(IIf(bsl_crit <= 1, Color.LightGreen, Color.Coral), Color)
-        Button2.BackColor = CType(IIf(bsl_crit <= 1, Color.LightGreen, Color.Coral), Color)
     End Sub
     'See page 35 of the ABS guide for Buckling
     Private Sub Calc_chaper5_3()
@@ -486,7 +528,6 @@ Public Class Form1
         TextBox71.Text = Round(flex_crit, 2).ToString
         '----- checks-----------
         TextBox71.BackColor = CType(IIf(flex_crit <= 1, Color.LightGreen, Color.Coral), Color)
-        Button3.BackColor = CType(IIf(flex_crit <= 1, Color.LightGreen, Color.Coral), Color)
     End Sub
     'See page 37 of the ABS guide for Buckling, local buckling of web
     Private Sub Calc_chaper5_5_1()
@@ -517,66 +558,35 @@ Public Class Form1
         TextBox95.Text = Round(Ksw, 2).ToString("0.00")
         TextBox96.Text = Round(τEw, 0).ToString
         TextBox97.Text = Round(τCw, 0).ToString
+
+        '-------------- checks------------
+        TextBox96.BackColor = CType(IIf(τEw > _τ, Color.LightGreen, Color.Coral), Color)
+        TextBox97.BackColor = CType(IIf(τCw > _τ, Color.LightGreen, Color.Coral), Color)
     End Sub
     Private Sub Calc_chaper5_5_2()
-        Dim σCix, σEix As Double
-        Dim σCiy, σEiy As Double
-        Dim Ksx_long As Double
-        Dim Ksy_short As Double
-        Dim C1, C2 As Double
-
+        Dim Ks, σC_local, σE_local, b As Double
 
         '==============Loading applied along long edge========================
-        If (_kx < 1 / 3) Then
-            If (_α >= 1 And _α <= 2) Then
-                Ksx_long = 24 / _α ^ 2
-                Ksx_long += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 18 / _α ^ 2) * (1 + _kx)
-                Ksx_long *= C2
-            Else
-                Ksx_long = 12 / _α ^ 2
-                Ksx_long += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 9 / _α ^ 2) * (1 + _kx)
-                Ksx_long *= C2
-            End If
-        Else
-            Ksx_long = (1 + 1 / _α ^ 2) ^ 2 * (1.675 - 0.675 * _kx)
-            Ksx_long *= C2
-        End If
+        Ks = 0.44
 
         '==============Elastic buckling stress=============================
-        σEix = Ksx_long * (_t / _S) ^ 2 * (PI ^ 2 * _E) / (12 * (1 - _v ^ 2))
+        σE_local = Ks * (_t / _b2) ^ 2 * (PI ^ 2 * _E) / (12 * (1 - _v ^ 2))
 
         '==============Critical buckling stress=============================
-        If (σEix < _Pr * _σ0) Then
-            σCix = σEix
+        If (σE_local < _Pr * _σ0) Then
+            σC_local = σE_local
         Else
-            σCix = _σ0 * (1 - _Pr * (1 - _Pr) * _σ0 / σEix)
+            σC_local = _σ0 * (1 - _Pr * (1 - _Pr) * _σ0 / σE_local)
         End If
 
-        'TextBox18.Text = Round(Ksx_long, 2).ToString("0.00")
-        'TextBox13.Text = Round(σEix, 0).ToString
-        'TextBox14.Text = Round(σCix, 0).ToString
+        TextBox86.Text = Round(Ks, 2).ToString("0.00")
+        TextBox88.Text = Round(σE_local, 0).ToString
+        TextBox87.Text = Round(σC_local, 0).ToString
+        TextBox89.Text = Round(_b2, 1).ToString("0.0")
 
-        '============== Y DIRECTION============================================
-        '==============Loading applied along short edge========================
-        If (_ky >= 0 And _ky <= 1) Then
-            Ksy_short = C1 * 8.4 / (_kx + 1.1)
-        Else
-            Ksy_short = C1 * (7.6 - 6.4 * _kx + 10 * _kx ^ 2)
-        End If
-
-        '==============Elastic buckling stress=============================
-        σEiy = Ksy_short * (_t / _S) ^ 2 * (PI ^ 2 * _E) / (12 * (1 - _v ^ 2))
-
-        '==============Critical buckling stress=============================
-        If (σEiy < _Pr * _σ0) Then
-            σCiy = σEiy
-        Else
-            σCiy = _σ0 * (1 - _Pr * (1 - _Pr) * _σ0 / σEiy)
-        End If
-
-        'TextBox17.Text = Round(Ksy_short, 2).ToString("0.00")
-        'TextBox16.Text = Round(σEiy, 0).ToString
-        'TextBox15.Text = Round(σCiy, 0).ToString
+        '----------- Check----------------------
+        TextBox88.BackColor = CType(IIf(σE_local > _σxmax, Color.LightGreen, Color.Coral), Color)
+        TextBox87.BackColor = CType(IIf(σC_local > _σxmax, Color.LightGreen, Color.Coral), Color)
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
@@ -586,7 +596,7 @@ Public Class Form1
         Calc_sequence()
     End Sub
 
-    Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click, NumericUpDown18.ValueChanged, NumericUpDown17.ValueChanged, NumericUpDown15.ValueChanged, NumericUpDown11.ValueChanged, NumericUpDown10.ValueChanged
+    Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click, NumericUpDown18.ValueChanged, NumericUpDown17.ValueChanged, NumericUpDown15.ValueChanged, NumericUpDown11.ValueChanged, NumericUpDown10.ValueChanged, RadioButton9.CheckedChanged, RadioButton11.CheckedChanged, RadioButton10.CheckedChanged
         Calc_sequence()
     End Sub
 
@@ -618,6 +628,7 @@ Public Class Form1
         Calc_chaper5_3()
         Calc_chaper5_5_1()
         Calc_chaper5_5_2()
+        Check_for_problems()
     End Sub
 
     'Write data to Word 
@@ -825,5 +836,35 @@ Public Class Form1
             'MessageBox.Show(ex.Message & "Problem storing file to" & dirpath_Rap)  ' Show the exception's message.
         End Try
     End Sub
+    Private Sub Check_for_problems()
+
+        '-------- find all numeric, combobox, checkbox and radiobutton controls -----------------
+        FindControlRecursive(all_textbox, Me, GetType(TextBox))   'Find the control
+        all_textbox = all_textbox.OrderBy(Function(x) x.Name).ToList()      'Alphabetical order
+        For i = 0 To all_textbox.Count - 1
+            Dim grbx As TextBox = CType(all_textbox(i), TextBox)
+            If grbx.BackColor = Color.Coral Then
+                Button9.Visible = CBool(vbTrue)
+                Exit For
+            Else
+                Button9.Visible = CBool(vbFalse)
+            End If
+        Next
+
+    End Sub
+
+    '----------- Find all controls on form1------
+    'Nota Bene, sequence of found control may be differen, List sort is required
+    Public Shared Function FindControlRecursive(ByVal list As List(Of Control), ByVal parent As Control, ByVal ctrlType As System.Type) As List(Of Control)
+        If parent Is Nothing Then Return list
+
+        If parent.GetType Is ctrlType Then
+            list.Add(parent)
+        End If
+        For Each child As Control In parent.Controls
+            FindControlRecursive(list, child, ctrlType)
+        Next
+        Return list
+    End Function
 
 End Class
