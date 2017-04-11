@@ -116,9 +116,11 @@ Public Class Form1
                 _b1 = _bf / 2
             Case RadioButton11.Checked  'Flat bar
                 _b1 = _tw / 2
-                _bf = _tw
+                _bf = 0
+                '_tf = 0
 
         End Select
+        NumericUpDown15.Value = CDec(_tf)
         NumericUpDown17.Value = CDec(_b1)
         NumericUpDown18.Value = CDec(_bf)
 
