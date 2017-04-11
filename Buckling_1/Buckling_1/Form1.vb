@@ -535,12 +535,12 @@ Public Class Form1
 
         'Web depth is _dw
         Select Case True
-            Case RadioButton6.Checked
+            Case RadioButton9.Checked Or RadioButton10.Checked
                 Cs = 1.0    'Angle of Tee bar
-            Case RadioButton7.Checked
-                Cs = 0.33   'Bulb plates
-            Case Else
+            Case RadioButton11.Checked
                 Cs = 0.11   'Flat bar
+            Case Else
+                Cs = 0.00099999 'Will never happen
         End Select
 
         Ksw = 4.0 * Cs
@@ -554,6 +554,7 @@ Public Class Form1
             τCw = _τ0 * (1 - _Pr * (1 - _Pr) * _τ0 / τEw)
         End If
 
+        TextBox91.Text = Round(Cs, 0).ToString
         TextBox94.Text = Round(_τ0, 0).ToString
         TextBox95.Text = Round(Ksw, 2).ToString("0.00")
         TextBox96.Text = Round(τEw, 0).ToString
@@ -611,7 +612,7 @@ Public Class Form1
         Write_to_word()
     End Sub
 
-    Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click, TabPage3.Enter, RadioButton8.CheckedChanged, RadioButton7.CheckedChanged, RadioButton6.CheckedChanged
+    Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click, TabPage3.Enter
         Calc_sequence()
     End Sub
 
@@ -836,6 +837,7 @@ Public Class Form1
             'MessageBox.Show(ex.Message & "Problem storing file to" & dirpath_Rap)  ' Show the exception's message.
         End Try
     End Sub
+
     Private Sub Check_for_problems()
 
         '-------- find all numeric, combobox, checkbox and radiobutton controls -----------------
