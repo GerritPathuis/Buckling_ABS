@@ -47,7 +47,7 @@ Public Class Form1
     Public _β As Double         'slenderness ratio [-]
 
     '------- dimensions stiffener (figure 2)--------
-    Public _dw As Double
+    Public _dw As Double        'Web depth
     Public _tw As Double
     Public _bf As Double
     Public _tf As Double
@@ -92,7 +92,7 @@ Public Class Form1
         _bf = NumericUpDown18.Value
         _tf = NumericUpDown15.Value
         _b1 = NumericUpDown17.Value
-        _dw = NumericUpDown11.Value
+        _dw = NumericUpDown11.Value 'Web depth
         _tw = NumericUpDown10.Value
 
         _As = _dw * _tw + _bf * _tf    'Area stiffener
@@ -160,7 +160,7 @@ Public Class Form1
         _E = NumericUpDown13.Value      'Elasticity
         _v = NumericUpDown12.Value      'Poissons
         _Pr = NumericUpDown16.Value     'Proportional lineair elastic limit of structure
-        _η = IIf(RadioButton4.Checked, 0.6, 0.8)    'See page 2
+        _η = CDbl(IIf(RadioButton4.Checked, 0.6, 0.8))    'See page 2
     End Sub
     'See page 28 of the ABS guide for Buckling
     Private Sub Calc_chaper3_1_1()
@@ -303,18 +303,18 @@ Public Class Form1
         strength_criterium += (_σymax / (_η * _σUx)) ^ 2
         strength_criterium += (_τ / (_η * τu)) ^ 2
 
-        TextBox12.Text = Round(_β, 2).ToString
-        TextBox19.Text = Round(_η, 2).ToString
-        TextBox22.Text = Round(_η, 2).ToString
-        TextBox23.Text = Round(Cx, 2).ToString
-        TextBox24.Text = Round(Cy, 2).ToString
+        TextBox12.Text = Round(_β, 2).ToString("0.00")
+        TextBox19.Text = Round(_η, 2).ToString("0.00")
+        TextBox22.Text = Round(_η, 2).ToString("0.00")
+        TextBox23.Text = Round(Cx, 2).ToString("0.00")
+        TextBox24.Text = Round(Cy, 2).ToString("0.00")
         TextBox25.Text = Round(τu, 0).ToString
         TextBox26.Text = Round(_σUx, 0).ToString
         TextBox27.Text = Round(_σUy, 0).ToString
         TextBox28.Text = Round(_φ, 2).ToString
         TextBox29.Text = Round(strength_criterium, 4).ToString
         '----------- Check----------------------
-        TextBox29.BackColor = IIf(strength_criterium <= 1, Color.LightGreen, Color.Coral)
+        TextBox29.BackColor = CType(IIf(strength_criterium <= 1, Color.LightGreen, Color.Coral), Color)
     End Sub
     'See page 31 of the ABS guide for Buckling, Uniform Lateral pressure
     Private Sub Calc_chaper3_5()
@@ -330,8 +330,8 @@ Public Class Form1
         TextBox82.Text = Round(_q, 3).ToString
         TextBox83.Text = Round(crit_lateral_press, 2).ToString
 
-        TextBox83.BackColor = IIf(crit_lateral_press < 1, Color.LightGreen, Color.Coral)
-        Button7.BackColor = IIf(crit_lateral_press < 1, Color.LightGreen, Color.Coral)
+        TextBox83.BackColor = CType(IIf(crit_lateral_press < 1, Color.LightGreen, Color.Coral), Color)
+        Button7.BackColor = CType(IIf(crit_lateral_press < 1, Color.LightGreen, Color.Coral), Color)
         NumericUpDown6.BackColor = TextBox30.BackColor
     End Sub
     'See page 45 of the ABS guide for Buckling
@@ -429,7 +429,7 @@ Public Class Form1
         TextBox48.Text = Round(M, 0).ToString
         TextBox49.Text = Round(σb, 0).ToString
         TextBox50.Text = Round(Cm, 2).ToString
-        TextBox51.Text = Round(_η, 1).ToString
+        TextBox51.Text = Round(_η, 1).ToString("0.00")
         TextBox52.Text = Round(bsl_crit, 2).ToString
 
         TextBox56.Text = Round(Cx, 1).ToString
@@ -437,32 +437,25 @@ Public Class Form1
         TextBox58.Text = Round(Cxy, 1).ToString
 
         '----- checks-----------
-        TextBox52.BackColor = IIf(bsl_crit <= 1, Color.LightGreen, Color.Coral)
-        Button2.BackColor = IIf(bsl_crit <= 1, Color.LightGreen, Color.Coral)
+        TextBox52.BackColor = CType(IIf(bsl_crit <= 1, Color.LightGreen, Color.Coral), Color)
+        Button2.BackColor = CType(IIf(bsl_crit <= 1, Color.LightGreen, Color.Coral), Color)
     End Sub
     'See page 35 of the ABS guide for Buckling
     Private Sub Calc_chaper5_3()
         Dim σa, σcL, σET, σCT, Ixf, Γ, Co, uf, m, n, Io, K, flex_crit As Double
-
 
         uf = 1 - 2 * _b1 / _bf                  'Unsymatrical factor
         m = 1 - uf * (0.7 - 0.1 * _dw / _bf)
 
         '--------------
         n = 1       'No half waves
-
         σcL = PI ^ 2 * _E * (n / _α + _α / n) ^ 2 * (_t / _S) ^ 2
         σcL /= (12 * (1 - _v ^ 2))
 
-
         Ixf = _tf * _bf ^ 3 / 12 * (1.0 + 3.0 * uf ^ 2 * _dw * _tw / _As)
-
         Γ = m * Ixf * _dw ^ 2 + _dw ^ 3 * _tw ^ 2 / 36.0
-
         Co = _E * _t ^ 3 / (3.0 * _S)
-
         Io = _Iy + m * _Iz + _As * (_y0 ^ 2 + _z0 ^ 2)
-
         K = (_bf * _tf ^ 3 + _dw * _tw ^ 3) / 3
 
         σET = K / 2.6 + (n * PI / _L) ^ 2 * Γ
@@ -477,7 +470,6 @@ Public Class Form1
         End If
 
         σa = _σax
-
         flex_crit = σa / (_η * σCT)
 
         TextBox59.Text = Round(σcL, 0).ToString
@@ -487,14 +479,104 @@ Public Class Form1
         TextBox63.Text = Round(uf, 1).ToString
         TextBox64.Text = Round(m, 1).ToString
         TextBox67.Text = Round(Io, 1).ToString
-        TextBox68.Text = Round(n, 1).ToString
+        TextBox68.Text = Round(n, 1).ToString("0.00")
         TextBox77.Text = Round(K, 1).ToString
         TextBox69.Text = Round(σET, 0).ToString
         TextBox70.Text = Round(σCT, 0).ToString
         TextBox71.Text = Round(flex_crit, 2).ToString
         '----- checks-----------
-        TextBox71.BackColor = IIf(flex_crit <= 1, Color.LightGreen, Color.Coral)
-        Button3.BackColor = IIf(flex_crit <= 1, Color.LightGreen, Color.Coral)
+        TextBox71.BackColor = CType(IIf(flex_crit <= 1, Color.LightGreen, Color.Coral), Color)
+        Button3.BackColor = CType(IIf(flex_crit <= 1, Color.LightGreen, Color.Coral), Color)
+    End Sub
+    'See page 37 of the ABS guide for Buckling, local buckling of web
+    Private Sub Calc_chaper5_5_1()
+        Dim Ksw, τEw, Cs, τCw As Double
+
+        'Web depth is _dw
+        Select Case True
+            Case RadioButton6.Checked
+                Cs = 1.0    'Angle of Tee bar
+            Case RadioButton7.Checked
+                Cs = 0.33   'Bulb plates
+            Case Else
+                Cs = 0.11   'Flat bar
+        End Select
+
+        Ksw = 4.0 * Cs
+
+        τEw = Ksw * PI ^ 2 * _E / (12 * (1 - _v ^ 2))
+        τEw *= (_t / _S) ^ 2
+
+        If (τEw < _Pr * _τ0) Then
+            τCw = τEw
+        Else
+            τCw = _τ0 * (1 - _Pr * (1 - _Pr) * _τ0 / τEw)
+        End If
+
+        TextBox94.Text = Round(_τ0, 0).ToString
+        TextBox95.Text = Round(Ksw, 2).ToString("0.00")
+        TextBox96.Text = Round(τEw, 0).ToString
+        TextBox97.Text = Round(τCw, 0).ToString
+    End Sub
+    Private Sub Calc_chaper5_5_2()
+        Dim σCix, σEix As Double
+        Dim σCiy, σEiy As Double
+        Dim Ksx_long As Double
+        Dim Ksy_short As Double
+        Dim C1, C2 As Double
+
+
+        '==============Loading applied along long edge========================
+        If (_kx < 1 / 3) Then
+            If (_α >= 1 And _α <= 2) Then
+                Ksx_long = 24 / _α ^ 2
+                Ksx_long += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 18 / _α ^ 2) * (1 + _kx)
+                Ksx_long *= C2
+            Else
+                Ksx_long = 12 / _α ^ 2
+                Ksx_long += (1.0875 * (1 + 1 / _α ^ 2) ^ 2 - 9 / _α ^ 2) * (1 + _kx)
+                Ksx_long *= C2
+            End If
+        Else
+            Ksx_long = (1 + 1 / _α ^ 2) ^ 2 * (1.675 - 0.675 * _kx)
+            Ksx_long *= C2
+        End If
+
+        '==============Elastic buckling stress=============================
+        σEix = Ksx_long * (_t / _S) ^ 2 * (PI ^ 2 * _E) / (12 * (1 - _v ^ 2))
+
+        '==============Critical buckling stress=============================
+        If (σEix < _Pr * _σ0) Then
+            σCix = σEix
+        Else
+            σCix = _σ0 * (1 - _Pr * (1 - _Pr) * _σ0 / σEix)
+        End If
+
+        'TextBox18.Text = Round(Ksx_long, 2).ToString("0.00")
+        'TextBox13.Text = Round(σEix, 0).ToString
+        'TextBox14.Text = Round(σCix, 0).ToString
+
+        '============== Y DIRECTION============================================
+        '==============Loading applied along short edge========================
+        If (_ky >= 0 And _ky <= 1) Then
+            Ksy_short = C1 * 8.4 / (_kx + 1.1)
+        Else
+            Ksy_short = C1 * (7.6 - 6.4 * _kx + 10 * _kx ^ 2)
+        End If
+
+        '==============Elastic buckling stress=============================
+        σEiy = Ksy_short * (_t / _S) ^ 2 * (PI ^ 2 * _E) / (12 * (1 - _v ^ 2))
+
+        '==============Critical buckling stress=============================
+        If (σEiy < _Pr * _σ0) Then
+            σCiy = σEiy
+        Else
+            σCiy = _σ0 * (1 - _Pr * (1 - _Pr) * _σ0 / σEiy)
+        End If
+
+        'TextBox17.Text = Round(Ksy_short, 2).ToString("0.00")
+        'TextBox16.Text = Round(σEiy, 0).ToString
+        'TextBox15.Text = Round(σCiy, 0).ToString
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
@@ -519,6 +601,10 @@ Public Class Form1
         Write_to_word()
     End Sub
 
+    Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click, TabPage3.Enter, RadioButton8.CheckedChanged, RadioButton7.CheckedChanged, RadioButton6.CheckedChanged
+        Calc_sequence()
+    End Sub
+
     Private Sub Calc_sequence()
         Read_dimensions()
         Read_properties()
@@ -530,6 +616,8 @@ Public Class Form1
         Calc_chaper13_1()
         Calc_chaper5_1()
         Calc_chaper5_3()
+        Calc_chaper5_5_1()
+        Calc_chaper5_5_2()
     End Sub
 
     'Write data to Word 
