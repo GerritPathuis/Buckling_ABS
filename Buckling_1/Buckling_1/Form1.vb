@@ -567,7 +567,7 @@ Public Class Form1
         TextBox97.BackColor = CType(IIf(τCw > _τ, Color.LightGreen, Color.Coral), Color)
     End Sub
     Private Sub Calc_chaper5_5_2()
-        Dim Ks, σC_local, σE_local, b As Double
+        Dim Ks, σC_local, σE_local As Double
 
         '==============Loading applied along long edge========================
         Ks = 0.44
@@ -590,6 +590,27 @@ Public Class Form1
         '----------- Check----------------------
         TextBox88.BackColor = CType(IIf(σE_local > _σxmax, Color.LightGreen, Color.Coral), Color)
         TextBox87.BackColor = CType(IIf(σC_local > _σxmax, Color.LightGreen, Color.Coral), Color)
+    End Sub
+    Private Sub Calc_chaper5_7()
+        Dim Ix, Iy As Double
+        Dim Ipx, Ipy As Double
+        Dim Asx, Asy As Double
+
+        Ix = _Iz
+        Iy = _Iy
+
+        Ipx = 3
+        Ipy = 4
+
+        Asx = 5
+        Asy = 6
+
+        TextBox93.Text = Round(Ix, 0).ToString
+        TextBox108.Text = Round(Iy, 0).ToString
+        TextBox92.Text = Round(Ipx, 0).ToString
+        TextBox109.Text = Round(Ipy, 0).ToString
+        TextBox98.Text = Round(Asx, 0).ToString
+        TextBox110.Text = Round(Asy, 0).ToString
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click, TabPage4.Enter
@@ -631,6 +652,7 @@ Public Class Form1
         Calc_chaper5_3()
         Calc_chaper5_5_1()
         Calc_chaper5_5_2()
+        Calc_chaper5_7()
         Check_for_problems()
     End Sub
 
@@ -827,14 +849,6 @@ Public Class Form1
             oTable.Rows.Item(1).Range.Font.Bold = CInt(True)
             oDoc.Bookmarks.Item("\endofdoc").Range.InsertParagraphAfter()
 
-
-            'ufilename = "Fan_cooling_disk_report_" & TextBox9.Text & "_" & TextBox10.Text & DateTime.Now.ToString("_yyyy_MM_dd") & "(" & TextBox3.Text & ")" & ".docx"
-            'If Directory.Exists(dirpath_Rap) Then
-            '    ufilename = dirpath_Rap & ufilename
-            'Else
-            '    ufilename = dirpath_Home & ufilename
-            'End If
-            'oWord.ActiveDocument.SaveAs(ufilename.ToString)
         Catch ex As Exception
             'MessageBox.Show(ex.Message & "Problem storing file to" & dirpath_Rap)  ' Show the exception's message.
         End Try
