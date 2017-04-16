@@ -84,7 +84,6 @@ Public Class Form1
     End Sub
 
     Private Sub Read_dimensions()
-
         _L = NumericUpDown1.Value   'Length
         _S = NumericUpDown2.Value   'stiffener distance
         _t = NumericUpDown3.Value   'plate thicknes
@@ -132,16 +131,30 @@ Public Class Form1
         _y0 = Abs((_b1 - 0.5 * _bf) * _bf * _tf / _As)
         _z0 = (0.5 * _dw ^ 2 * _tw + (_dw + 0.5 * _tf) * _bf * _tf) / _As
 
-        _Iy = _dw ^ 3 * _tw / 12
-        _Iy += _tf ^ 3 * _bf / 12
-        _Iy += 0.25 * _dw ^ 3 * _tw
-        _Iy += _bf * _tf * (_dw + 0.5 * _tf) ^ 2
-        _Iy -= _As * _z0 ^ 2
+        Dim _iy1, _iy2, _iy3, _iy4, _iy5 As Double
+        'Chapter 3/13.1 See page 46 of the ABS guide for Buckling
 
-        _Iz = _tw ^ 3 * _dw / 12
-        _Iz += _bf ^ 3 * _tf / 12
-        _Iz += _bf * _tf * (_b1 - 0.5 * _bf) ^ 2
-        _Iz -= _As * _z0 ^ 2
+        '---------stiffener flange-------
+        _Iy = _tf ^ 3 * _bf / 12                       'Moment of Inertia
+        _Iy += _bf * _tf * Abs(_dw - _z0 + _tf / 2) ^ 2 'verplaatsing 
+
+        '---------stiffener web -------
+        _Iy += _dw ^ 3 * _tw / 12                    'Moment of Inertia
+        _Iy += _dw * _tw * Abs(_z0 - _dw / 2) ^ 2    'verplaatsing
+
+        TextBox119.Text = Round(_iy1, 2).ToString
+        TextBox120.Text = Round(_iy2, 2).ToString
+        TextBox121.Text = Round(_iy3, 2).ToString
+        TextBox122.Text = Round(_iy4, 0).ToString
+        TextBox123.Text = Round(_iy5, 0).ToString
+
+        '---------stiffener flange-------
+        _Iz = _bf ^ 3 * _tf / 12                       'Moment of Inertia
+        _Iz += _bf * _tf * Abs(_b1 - _y0 - _bf / 2) ^ 2 'verplaatsing 
+
+        '---------stiffener web -------
+        _Iz += _tw ^ 3 * _dw / 12     'Moment of Inertia
+        _Iz += _dw * _tw * _y0 ^ 2   'verplaatsing
 
         TextBox72.Text = Round(_As, 2).ToString
         TextBox73.Text = Round(_y0, 2).ToString
@@ -199,7 +212,7 @@ Public Class Form1
         _η = CDbl(IIf(RadioButton4.Checked, 0.6, 0.8))    'See page 2
     End Sub
     'See page 28 of the ABS guide for Buckling
-    Private Sub Calc_chaper3_1_1()
+    Private Sub Calc_chapter3_1_1()
         Dim Ks, τE, C1 As Double
 
         Select Case True
@@ -232,7 +245,7 @@ Public Class Form1
         TextBox2.BackColor = CType(IIf(_τC > _τ, Color.LightGreen, Color.Coral), Color)
     End Sub
     'See page 29 of the ABS guide for Buckling
-    Private Sub Calc_chaper3_1_2()
+    Private Sub Calc_chapter3_1_2()
         Dim σCix, σEix As Double
         Dim σCiy, σEiy As Double
         Dim Ksx_long As Double
@@ -311,7 +324,7 @@ Public Class Form1
     End Sub
 
     'See page 30 of the ABS guide for Buckling
-    Private Sub Calc_chaper3_3()
+    Private Sub Calc_chapter3_3()
         Dim τu, Cy, Cx As Double
         Dim strength_criterium As Double
 
@@ -363,7 +376,7 @@ Public Class Form1
         TextBox29.BackColor = CType(IIf(strength_criterium <= 1, Color.LightGreen, Color.Coral), Color)
     End Sub
     'See page 31 of the ABS guide for Buckling, Uniform Lateral pressure
-    Private Sub Calc_chaper3_5()
+    Private Sub Calc_chapter3_5()
         Dim σe, crit_lateral_press As Double
 
         σe = Sqrt(_σxmax ^ 2 - _σxmax * _σymax + _σymax ^ 2 + 3 * _τ ^ 2) 'Von misses
@@ -381,7 +394,7 @@ Public Class Form1
         NumericUpDown6.BackColor = TextBox30.BackColor
     End Sub
     'See page 45 of the ABS guide for Buckling
-    Private Sub Calc_chaper13_1()
+    Private Sub Calc_chapter13_1()
         Dim Zep, Zwp As Double
 
         _se = _S     'Page 32, Buckling state limit is satisfied
@@ -431,7 +444,7 @@ Public Class Form1
         TextBox43.Text = Round(_smw, 1).ToString
     End Sub
     'See page 32 of the ABS guide for Buckling
-    Private Sub Calc_chaper5_1()
+    Private Sub Calc_chapter5_1()
         Dim σa, σEC, σCA, Cm As Double
         Dim σb, M As Double
         Dim Cy, Cx, Cxy As Double
@@ -486,7 +499,7 @@ Public Class Form1
         TextBox52.BackColor = CType(IIf(bsl_crit <= 1, Color.LightGreen, Color.Coral), Color)
     End Sub
     'See page 35 of the ABS guide for Buckling
-    Private Sub Calc_chaper5_3()
+    Private Sub Calc_chapter5_3()
         Dim σa, σcL, σET, σCT, Ixf, Γ, Co, uf, m, n, Io, K, flex_crit As Double
 
         uf = 1 - 2 * _b1 / _bf                  'Unsymatrical factor
@@ -533,7 +546,7 @@ Public Class Form1
         TextBox71.BackColor = CType(IIf(flex_crit <= 1, Color.LightGreen, Color.Coral), Color)
     End Sub
     'See page 37 of the ABS guide for Buckling, local buckling of web
-    Private Sub Calc_chaper5_5_1()
+    Private Sub Calc_chapter5_5_1()
         Dim Ksw, τEw, Cs, τCw As Double
 
         'Web depth is _dw
@@ -567,7 +580,7 @@ Public Class Form1
         TextBox96.BackColor = CType(IIf(τEw > _τ, Color.LightGreen, Color.Coral), Color)
         TextBox97.BackColor = CType(IIf(τCw > _τ, Color.LightGreen, Color.Coral), Color)
     End Sub
-    Private Sub Calc_chaper5_5_2()
+    Private Sub Calc_chapter5_5_2()
         Dim Ks, σC_local, σE_local As Double
 
         '==============Loading applied along long edge========================
@@ -592,7 +605,7 @@ Public Class Form1
         TextBox88.BackColor = CType(IIf(σE_local > _σxmax, Color.LightGreen, Color.Coral), Color)
         TextBox87.BackColor = CType(IIf(σC_local > _σxmax, Color.LightGreen, Color.Coral), Color)
     End Sub
-    Private Sub Calc_chaper5_7()
+    Private Sub Calc_chapter5_7()
         Dim Ix, Iy As Double
         Dim Ipx, Ipy As Double
         Dim Asx, Asy As Double
@@ -644,16 +657,16 @@ Public Class Form1
         Read_dimensions()
         Read_properties()
         Read_loads()
-        Calc_chaper3_1_1()
-        Calc_chaper3_1_2()
-        Calc_chaper3_3()
-        Calc_chaper3_5()
-        Calc_chaper13_1()
-        Calc_chaper5_1()
-        Calc_chaper5_3()
-        Calc_chaper5_5_1()
-        Calc_chaper5_5_2()
-        Calc_chaper5_7()
+        Calc_chapter3_1_1()
+        Calc_chapter3_1_2()
+        Calc_chapter3_3()
+        Calc_chapter3_5()
+        Calc_chapter13_1()
+        Calc_chapter5_1()
+        Calc_chapter5_3()
+        Calc_chapter5_5_1()
+        Calc_chapter5_5_2()
+        Calc_chapter5_7()
         Check_for_problems()
     End Sub
 
