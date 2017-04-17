@@ -246,6 +246,10 @@ Partial Class Form1
         Me.NumericUpDown19 = New System.Windows.Forms.NumericUpDown()
         Me.Label58 = New System.Windows.Forms.Label()
         Me.TabPage6 = New System.Windows.Forms.TabPage()
+        Me.GroupBox28 = New System.Windows.Forms.GroupBox()
+        Me.RadioButton9 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton10 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton11 = New System.Windows.Forms.RadioButton()
         Me.GroupBox27 = New System.Windows.Forms.GroupBox()
         Me.Label349 = New System.Windows.Forms.Label()
         Me.Label346 = New System.Windows.Forms.Label()
@@ -342,9 +346,6 @@ Partial Class Form1
         Me.Label106 = New System.Windows.Forms.Label()
         Me.Label143 = New System.Windows.Forms.Label()
         Me.Label144 = New System.Windows.Forms.Label()
-        Me.RadioButton11 = New System.Windows.Forms.RadioButton()
-        Me.RadioButton9 = New System.Windows.Forms.RadioButton()
-        Me.RadioButton10 = New System.Windows.Forms.RadioButton()
         Me.TabPage8 = New System.Windows.Forms.TabPage()
         Me.GroupBox18 = New System.Windows.Forms.GroupBox()
         Me.TextBox77 = New System.Windows.Forms.TextBox()
@@ -586,7 +587,6 @@ Partial Class Form1
         Me.TextBox95 = New System.Windows.Forms.TextBox()
         Me.TextBox96 = New System.Windows.Forms.TextBox()
         Me.TextBox97 = New System.Windows.Forms.TextBox()
-        Me.GroupBox28 = New System.Windows.Forms.GroupBox()
         Me.TabControl1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
         Me.GroupBox19.SuspendLayout()
@@ -627,6 +627,7 @@ Partial Class Form1
         Me.GroupBox8.SuspendLayout()
         CType(Me.NumericUpDown19, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage6.SuspendLayout()
+        Me.GroupBox28.SuspendLayout()
         Me.GroupBox27.SuspendLayout()
         Me.GroupBox26.SuspendLayout()
         Me.GroupBox25.SuspendLayout()
@@ -648,7 +649,6 @@ Partial Class Form1
         Me.GroupBox21.SuspendLayout()
         Me.GroupBox20.SuspendLayout()
         CType(Me.NumericUpDown20, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.GroupBox28.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -3068,6 +3068,50 @@ Partial Class Form1
         Me.TabPage6.Text = "Stiffener"
         Me.TabPage6.UseVisualStyleBackColor = True
         '
+        'GroupBox28
+        '
+        Me.GroupBox28.Controls.Add(Me.RadioButton9)
+        Me.GroupBox28.Controls.Add(Me.RadioButton10)
+        Me.GroupBox28.Controls.Add(Me.RadioButton11)
+        Me.GroupBox28.Location = New System.Drawing.Point(22, 22)
+        Me.GroupBox28.Name = "GroupBox28"
+        Me.GroupBox28.Size = New System.Drawing.Size(472, 57)
+        Me.GroupBox28.TabIndex = 87
+        Me.GroupBox28.TabStop = False
+        Me.GroupBox28.Text = "Select type of stiffener"
+        '
+        'RadioButton9
+        '
+        Me.RadioButton9.AutoSize = True
+        Me.RadioButton9.Checked = True
+        Me.RadioButton9.Location = New System.Drawing.Point(26, 22)
+        Me.RadioButton9.Name = "RadioButton9"
+        Me.RadioButton9.Size = New System.Drawing.Size(72, 17)
+        Me.RadioButton9.TabIndex = 84
+        Me.RadioButton9.TabStop = True
+        Me.RadioButton9.Text = "Angle iron"
+        Me.RadioButton9.UseVisualStyleBackColor = True
+        '
+        'RadioButton10
+        '
+        Me.RadioButton10.AutoSize = True
+        Me.RadioButton10.Location = New System.Drawing.Point(104, 22)
+        Me.RadioButton10.Name = "RadioButton10"
+        Me.RadioButton10.Size = New System.Drawing.Size(64, 17)
+        Me.RadioButton10.TabIndex = 85
+        Me.RadioButton10.Text = "Tee iron"
+        Me.RadioButton10.UseVisualStyleBackColor = True
+        '
+        'RadioButton11
+        '
+        Me.RadioButton11.AutoSize = True
+        Me.RadioButton11.Location = New System.Drawing.Point(174, 22)
+        Me.RadioButton11.Name = "RadioButton11"
+        Me.RadioButton11.Size = New System.Drawing.Size(113, 17)
+        Me.RadioButton11.TabIndex = 86
+        Me.RadioButton11.Text = "Flar bar (no flange)"
+        Me.RadioButton11.UseVisualStyleBackColor = True
+        '
         'GroupBox27
         '
         Me.GroupBox27.Controls.Add(Me.Label349)
@@ -3227,7 +3271,7 @@ Partial Class Form1
         Me.GroupBox26.Size = New System.Drawing.Size(593, 77)
         Me.GroupBox26.TabIndex = 80
         Me.GroupBox26.TabStop = False
-        Me.GroupBox26.Text = "Moment of Plate only"
+        Me.GroupBox26.Text = "Moment of Inertia Plate only"
         '
         'Label337
         '
@@ -3235,9 +3279,9 @@ Partial Class Form1
         Me.Label337.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label337.Location = New System.Drawing.Point(19, 21)
         Me.Label337.Name = "Label337"
-        Me.Label337.Size = New System.Drawing.Size(257, 16)
+        Me.Label337.Size = New System.Drawing.Size(186, 16)
         Me.Label337.TabIndex = 69
-        Me.Label337.Text = "Moment of Inertia of Y-axis, trough centroid"
+        Me.Label337.Text = "Moment of Inertia about Y-axis"
         '
         'TextBox124
         '
@@ -3263,9 +3307,9 @@ Partial Class Form1
         Me.Label339.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label339.Location = New System.Drawing.Point(19, 44)
         Me.Label339.Name = "Label339"
-        Me.Label339.Size = New System.Drawing.Size(256, 16)
+        Me.Label339.Size = New System.Drawing.Size(185, 16)
         Me.Label339.TabIndex = 72
-        Me.Label339.Text = "Moment of Inertia of Z-axis, trough centroid"
+        Me.Label339.Text = "Moment of Inertia about Z-axis"
         '
         'TextBox125
         '
@@ -3413,7 +3457,7 @@ Partial Class Form1
         Me.GroupBox24.Size = New System.Drawing.Size(593, 76)
         Me.GroupBox24.TabIndex = 80
         Me.GroupBox24.TabStop = False
-        Me.GroupBox24.Text = "Moment of Inertia, Stiffener inluding effective plate"
+        Me.GroupBox24.Text = "Moment of Inertia, Stiffener including effective plate"
         '
         'Label325
         '
@@ -3506,7 +3550,7 @@ Partial Class Form1
         Me.GroupBox23.Size = New System.Drawing.Size(593, 69)
         Me.GroupBox23.TabIndex = 78
         Me.GroupBox23.TabStop = False
-        Me.GroupBox23.Text = "Moment of Inertia, Stiffener exluding plate"
+        Me.GroupBox23.Text = "Moment of Inertia, Stiffener only"
         '
         'Label232
         '
@@ -3532,9 +3576,9 @@ Partial Class Form1
         Me.Label231.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label231.Location = New System.Drawing.Point(424, 20)
         Me.Label231.Name = "Label231"
-        Me.Label231.Size = New System.Drawing.Size(25, 16)
+        Me.Label231.Size = New System.Drawing.Size(18, 16)
         Me.Label231.TabIndex = 70
-        Me.Label231.Text = "Iy2"
+        Me.Label231.Text = "Iy"
         '
         'Label230
         '
@@ -3560,9 +3604,9 @@ Partial Class Form1
         Me.Label229.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label229.Location = New System.Drawing.Point(424, 46)
         Me.Label229.Name = "Label229"
-        Me.Label229.Size = New System.Drawing.Size(24, 16)
+        Me.Label229.Size = New System.Drawing.Size(17, 16)
         Me.Label229.TabIndex = 73
-        Me.Label229.Text = "Iz2"
+        Me.Label229.Text = "Iz"
         '
         'Label234
         '
@@ -4086,38 +4130,6 @@ Partial Class Form1
         Me.Label144.Size = New System.Drawing.Size(129, 16)
         Me.Label144.TabIndex = 0
         Me.Label144.Text = "Stiffener flange width"
-        '
-        'RadioButton11
-        '
-        Me.RadioButton11.AutoSize = True
-        Me.RadioButton11.Location = New System.Drawing.Point(174, 22)
-        Me.RadioButton11.Name = "RadioButton11"
-        Me.RadioButton11.Size = New System.Drawing.Size(113, 17)
-        Me.RadioButton11.TabIndex = 86
-        Me.RadioButton11.Text = "Flar bar (no flange)"
-        Me.RadioButton11.UseVisualStyleBackColor = True
-        '
-        'RadioButton9
-        '
-        Me.RadioButton9.AutoSize = True
-        Me.RadioButton9.Checked = True
-        Me.RadioButton9.Location = New System.Drawing.Point(26, 22)
-        Me.RadioButton9.Name = "RadioButton9"
-        Me.RadioButton9.Size = New System.Drawing.Size(72, 17)
-        Me.RadioButton9.TabIndex = 84
-        Me.RadioButton9.TabStop = True
-        Me.RadioButton9.Text = "Angle iron"
-        Me.RadioButton9.UseVisualStyleBackColor = True
-        '
-        'RadioButton10
-        '
-        Me.RadioButton10.AutoSize = True
-        Me.RadioButton10.Location = New System.Drawing.Point(104, 22)
-        Me.RadioButton10.Name = "RadioButton10"
-        Me.RadioButton10.Size = New System.Drawing.Size(64, 17)
-        Me.RadioButton10.TabIndex = 85
-        Me.RadioButton10.Text = "Tee iron"
-        Me.RadioButton10.UseVisualStyleBackColor = True
         '
         'TabPage8
         '
@@ -6629,18 +6641,6 @@ Partial Class Form1
         Me.TextBox97.TabIndex = 53
         Me.TextBox97.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
-        'GroupBox28
-        '
-        Me.GroupBox28.Controls.Add(Me.RadioButton9)
-        Me.GroupBox28.Controls.Add(Me.RadioButton10)
-        Me.GroupBox28.Controls.Add(Me.RadioButton11)
-        Me.GroupBox28.Location = New System.Drawing.Point(22, 22)
-        Me.GroupBox28.Name = "GroupBox28"
-        Me.GroupBox28.Size = New System.Drawing.Size(472, 57)
-        Me.GroupBox28.TabIndex = 87
-        Me.GroupBox28.TabStop = False
-        Me.GroupBox28.Text = "Select type of stiffener"
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -6705,6 +6705,8 @@ Partial Class Form1
         Me.GroupBox8.PerformLayout()
         CType(Me.NumericUpDown19, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage6.ResumeLayout(False)
+        Me.GroupBox28.ResumeLayout(False)
+        Me.GroupBox28.PerformLayout()
         Me.GroupBox27.ResumeLayout(False)
         Me.GroupBox27.PerformLayout()
         Me.GroupBox26.ResumeLayout(False)
@@ -6738,8 +6740,6 @@ Partial Class Form1
         Me.GroupBox20.ResumeLayout(False)
         Me.GroupBox20.PerformLayout()
         CType(Me.NumericUpDown20, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GroupBox28.ResumeLayout(False)
-        Me.GroupBox28.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub

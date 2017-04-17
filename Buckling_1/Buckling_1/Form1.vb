@@ -92,6 +92,7 @@ Public Class Form1
 
     Private Sub Read_dimensions()
         Dim Iy1, Iz1 As Double
+        Dim Iy3, Iz3 As Double
 
         _L = NumericUpDown1.Value   'Length
         _S = NumericUpDown2.Value   'stiffener distance
@@ -151,52 +152,56 @@ Public Class Form1
         _z1 = (_Aweb * _dw / 2 + _Aflange * (_dw + _tf / 2) - _Aplate * _t / 2) / (_Aplate + _Aweb + _Aflange)
         _y1 = (_Aplate + _Aweb + _Aflange * (_bf / 2 - _b1)) / (_Aplate + _Aweb + _Aflange)
 
+
         'Chapter 3/13.1 See page 46 of the ABS guide for Buckling
         'Not happy with the presented formula in paragraph 3.1.2
         'Formulas are replaced !
+
+        _Iy = Calc_inertia(_bf, _tf, Abs(_dw - _z0 + _tf / 2))  '---------stiffener flange-------
+        _Iy += Calc_inertia(_tw, _dw, Abs(_z0 - _dw / 2))       '---------stiffener web -------
+        _Iz = Calc_inertia(_tf, _bf, Abs(_b1 - _y0 - _bf / 2))  '---------stiffener flange-------
+        _Iz += Calc_inertia(_dw, _tw, _y0)                      '---------stiffener web -------
+
+        '-----------------------Plate-----------------
+        Iy1 = Calc_inertia(_t, _S, 0) 'Y axis trough centroid
+        Iz1 = Calc_inertia(_S, _t, 0) 'Z axis trough centroid
+
+        '---------Plate + stiffener Moment of inertia, trough Centroid combination -------
+        '---------------------------------------------------------------------------------
         '---------stiffener flange-------
-        _Iy = _tf ^ 3 * _bf / 12                       'Moment of Inertia
-        _Iy += _bf * _tf * Abs(_dw - _z0 + _tf / 2) ^ 2 'verplaatsing 
-
-        '---------stiffener web -------
-        _Iy += _dw ^ 3 * _tw / 12                    'Moment of Inertia
-        _Iy += _dw * _tw * Abs(_z0 - _dw / 2) ^ 2    'verplaatsing
-
-        '---------stiffener flange-------
-        _Iz = _bf ^ 3 * _tf / 12                       'Moment of Inertia
-        _Iz += _bf * _tf * Abs(_b1 - _y0 - _bf / 2) ^ 2 'verplaatsing 
-
-        '---------stiffener web -------
-        _Iz += _tw ^ 3 * _dw / 12     'Moment of Inertia
-        _Iz += _dw * _tw * _y0 ^ 2   'verplaatsing
-
-        '---------Plate Moment of inertia -------
-        Iy1 = _t * _S ^ 3 / 12   'Y axis trough centroid
-        Iz1 = _S * _t ^ 3 / 12   'Z axis trough centroid
+        Iy3 = Calc_inertia(_bf, _tf, _dw - _z1 + _tf / 2)   '---------stiffener flange-------
+        Iy3 += Calc_inertia(_tw, _dw, _z1 - _dw / 2)        '---------stiffener web -------
+        Iy3 += Calc_inertia(_S, _t, _z1 + _t / 2)           '---------plate -------
+        '---------------------------------------------------------------------------------
+        Iz3 = Calc_inertia(_tf, _bf, _bf / 2 - _b1 + _y1)   '---------stiffener flange-------
+        Iz3 += Calc_inertia(_dw, _tw, _y1)                  '---------stiffener web -------
+        Iz3 += Calc_inertia(_t, _S, _y1)                    '---------plate -------
 
         TextBox130.Text = Round(_Aflange, 2).ToString
         TextBox126.Text = Round(_Aweb, 2).ToString
         TextBox72.Text = Round(_Aplate, 2).ToString
         TextBox127.Text = Round(_A, 2).ToString
-
-        TextBox124.Text = Round(Iy1, 0).ToString
+        TextBox124.Text = Round(Iy1, 1).ToString
         TextBox125.Text = Round(Iz1, 1).ToString
-
-
-
+        TextBox121.Text = Round(Iy3, 1).ToString
+        TextBox120.Text = Round(Iz3, 1).ToString
         TextBox73.Text = Round(_y0, 2).ToString
         TextBox74.Text = Round(_z0, 2).ToString
-
         TextBox129.Text = Round(_y1, 2).ToString
         TextBox128.Text = Round(_z1, 2).ToString
-
         TextBox75.Text = Round(_Iy, 1).ToString
         TextBox65.Text = Round(_Iy, 1).ToString
-
         TextBox76.Text = Round(_Iz, 1).ToString
         TextBox66.Text = Round(_Iz, 1).ToString
-
     End Sub
+    Private Function Calc_inertia(b As Double, h As Double, move As Double) As Double
+        'Calculatus the Moment of Inertia of a rectangle
+        Dim Inert As Double
+        Inert = b ^ 3 * h / 12              'Moment of Inertia
+        Inert += b * h * move ^ 2           'verplaatsing
+        Return (Inert)
+    End Function
+
     Private Sub Read_loads()
         _q = NumericUpDown6.Value   'Uniform lateral load [N/cm2]
         _σax = NumericUpDown5.Value 'Comp stress in longit direction
@@ -901,8 +906,6 @@ Public Class Form1
             'MessageBox.Show(ex.Message & "Problem storing file to" & dirpath_Rap)  ' Show the exception's message.
         End Try
     End Sub
-
-
 
     Private Sub Check_for_problems()
         '-------- find all numeric, combobox, checkbox and radiobutton controls -----------------
