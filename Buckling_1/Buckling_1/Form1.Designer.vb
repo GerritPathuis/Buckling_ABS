@@ -3364,7 +3364,7 @@ Partial Class Form1
         Me.GroupBox25.Size = New System.Drawing.Size(593, 79)
         Me.GroupBox25.TabIndex = 81
         Me.GroupBox25.TabStop = False
-        Me.GroupBox25.Text = "Moment of Inertia, Stiffener + effective plate trough Neutral line"
+        Me.GroupBox25.Text = "Moment of Inertia, Stiffener including effective plate "
         '
         'Label331
         '

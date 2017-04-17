@@ -65,6 +65,9 @@ Public Class Form1
     Public _Iy As Double    'Moment of Inertia of stiffener, trough centroid, excl plating [cm4]
     Public _Iz As Double    'Moment of Inertia of stiffener, trough centroid, excl plating [cm4]
 
+    Public _Ipy As Double   'Moment of Inertia of stiffener + plate, trough Neutral line [cm4]
+    Public _Ipz As Double   'Moment of Inertia of stiffener + plate, trough Neutral line [cm4]
+
     Public _se As Double    'Plate effective width (plate buckling limit must be satiesfied)
     Public _sw As Double    'Plate effective breadth
 
@@ -157,9 +160,10 @@ Public Class Form1
         'Not happy with the presented formula in paragraph 3.1.2
         'Formulas are replaced !
 
-        _Iy = Calc_inertia(_bf, _tf, Abs(_dw - _z0 + _tf / 2))  '---------stiffener flange-------
-        _Iy += Calc_inertia(_tw, _dw, Abs(_z0 - _dw / 2))       '---------stiffener web -------
-        _Iz = Calc_inertia(_tf, _bf, Abs(_b1 - _y0 - _bf / 2))  '---------stiffener flange-------
+        _Iy = Calc_inertia(_bf, _tf, _dw + _tf / 2 - _z0)  '---------stiffener flange-------
+        _Iy += Calc_inertia(_tw, _dw, _dw / 2 - _z0)       '---------stiffener web -------
+
+        _Iz = Calc_inertia(_tf, _bf, Abs(_bf / 2 - _b1 - _y0))  '---------stiffener flange-------
         _Iz += Calc_inertia(_dw, _tw, _y0)                      '---------stiffener web -------
 
         '-----------------------Plate-----------------
@@ -168,14 +172,17 @@ Public Class Form1
 
         '---------Plate + stiffener Moment of inertia, trough Centroid combination -------
         '---------------------------------------------------------------------------------
-        '---------stiffener flange-------
-        Iy3 = Calc_inertia(_bf, _tf, _dw - _z1 + _tf / 2)   '---------stiffener flange-------
-        Iy3 += Calc_inertia(_tw, _dw, _z1 - _dw / 2)        '---------stiffener web -------
-        Iy3 += Calc_inertia(_S, _t, _z1 + _t / 2)           '---------plate -------
+        Iy3 = Calc_inertia(_bf, _tf, _dw + _tf / 2 - _z1)   '---------stiffener flange-------
+        Iy3 += Calc_inertia(_tw, _dw, _dw / 2 - _z1)        '---------stiffener web -------
+        Iy3 += Calc_inertia(_S, _t, _t / 2 + _z1)           '---------plate -------
         '---------------------------------------------------------------------------------
         Iz3 = Calc_inertia(_tf, _bf, _bf / 2 - _b1 + _y1)   '---------stiffener flange-------
         Iz3 += Calc_inertia(_dw, _tw, _y1)                  '---------stiffener web -------
         Iz3 += Calc_inertia(_t, _S, _y1)                    '---------plate -------
+
+        '---------Plate + stiffener Moment of inertia, trough Neutral combination -------
+        _Ipy = Iy3
+        _Ipz = Iz3
 
         TextBox130.Text = Round(_Aflange, 2).ToString
         TextBox126.Text = Round(_Aweb, 2).ToString
@@ -193,6 +200,8 @@ Public Class Form1
         TextBox65.Text = Round(_Iy, 1).ToString
         TextBox76.Text = Round(_Iz, 1).ToString
         TextBox66.Text = Round(_Iz, 1).ToString
+        TextBox123.Text = Round(_Ipy, 1).ToString
+        TextBox122.Text = Round(_Ipz, 1).ToString
     End Sub
     Private Function Calc_inertia(b As Double, h As Double, move As Double) As Double
         'Calculatus the Moment of Inertia of a rectangle
