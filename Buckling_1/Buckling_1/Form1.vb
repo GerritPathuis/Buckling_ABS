@@ -48,14 +48,17 @@ Public Class Form1
 
     '------- dimensions stiffener (figure 2)--------
     Public _dw As Double        'Web depth
-    Public _tw As Double
-    Public _bf As Double
-    Public _tf As Double
-    Public _b1 As Double
-    Public _b2 As Double
+    Public _tw As Double        'Web
+    Public _bf As Double        'Flange
+    Public _tf As Double        'Flange
+    Public _b1 As Double        'Flange
+    Public _b2 As Double        'Flange
 
-    Public _y0 As Double        'Centriod to center line web [cm]
-    Public _z0 As Double        'Centroid to plate [cm]
+    Public _y0 As Double    'Centriod stiffener to center line web [cm]
+    Public _z0 As Double    'Centroid stiffener to plate [cm]
+
+    Public _y1 As Double    'Centriod stiffener+plate to center line web [cm]
+    Public _z1 As Double    'Centroid stiffener+plate to plate [cm]
 
     Public _Iw As Double    'Moment of inertia of stiffener and effective plating sw
     Public _Ie As Double    'Moment Of inertia Of stiffener And effective plating se
@@ -70,10 +73,14 @@ Public Class Form1
 
     Public _σUx As Double   'Ultimate stress 
     Public _σUy As Double   'Ultimate stress 
-    Public _smw As Double      'Effective section modulus of longitidunal at flange
+    Public _smw As Double   'Effective section modulus of longitidunal at flange
 
-    Public _A As Double     'Total plate + stiffener (in ABS named "A")
-    Public _As As Double    'Area stiffener (in ABS called "As")
+    Public _A As Double         'Total plate + stiffener (in ABS named "A")
+    Public _As As Double        'Area stiffener (in ABS called "As")
+    Public _Aplate As Double    'Area plate
+    Public _Aweb As Double      'Area web (of stiffener)
+    Public _Aflange As Double   'Area flange (of stiffener)
+
     Public _Ae As Double    'Effective area plate + area stiffener
     Public _Aw As Double    'Effective breadth area plate + area stiffener
 
@@ -84,6 +91,8 @@ Public Class Form1
     End Sub
 
     Private Sub Read_dimensions()
+        Dim Iy1, Iz1 As Double
+
         _L = NumericUpDown1.Value   'Length
         _S = NumericUpDown2.Value   'stiffener distance
         _t = NumericUpDown3.Value   'plate thicknes
@@ -107,33 +116,44 @@ Public Class Form1
                 If _b2 <= _b1 Then
                     _b2 = _b1
                 End If
+                _b2 = _bf - _b1 - _tw / 2       'Larger outstanding flange
             Case RadioButton10.Checked  'Tee iron
                 '---- minimale breedte flange 40mm---
                 If _bf <= 4 Then
                     _bf = 4
                 End If
                 _b1 = _bf / 2
+                _b2 = _bf - _b1 - _tw / 2       'Larger outstanding flange
             Case RadioButton11.Checked  'Flat bar
-                _b1 = _tw / 2
+                _b1 = 0
+                _b2 = 0
                 _bf = 0
-                '_tf = 0
+                _tf = 0
 
         End Select
         NumericUpDown15.Value = CDec(_tf)
         NumericUpDown17.Value = CDec(_b1)
         NumericUpDown18.Value = CDec(_bf)
 
-        _b2 = _bf - _b1 - _tw / 2       'Larger outstanding flange
         TextBox90.Text = Round(_b2, 2).ToString("0.00")
 
-        _As = _dw * _tw + _bf * _tf     'Area stiffener
+        _Aplate = _t * _S           'Area plate
+        _Aweb = _dw * _tw           'Area web
+        _Aflange = _tf * _bf        'Area flange
+        _As = _Aflange + _Aweb      'Area stiffener
+        _A = _Aplate + _As          'Area plate+ stiffener
 
+        '------------- centroid stiffener---------------
         _y0 = Abs((_b1 - 0.5 * _bf) * _bf * _tf / _As)
         _z0 = (0.5 * _dw ^ 2 * _tw + (_dw + 0.5 * _tf) * _bf * _tf) / _As
 
-        Dim _iy1, _iy2, _iy3, _iy4, _iy5 As Double
-        'Chapter 3/13.1 See page 46 of the ABS guide for Buckling
+        '------------- centroid stiffener + plate---------------
+        _z1 = (_Aweb * _dw / 2 + _Aflange * (_dw + _tf / 2) - _Aplate * _t / 2) / (_Aplate + _Aweb + _Aflange)
+        _y1 = (_Aplate + _Aweb + _Aflange * (_bf / 2 - _b1)) / (_Aplate + _Aweb + _Aflange)
 
+        'Chapter 3/13.1 See page 46 of the ABS guide for Buckling
+        'Not happy with the presented formula in paragraph 3.1.2
+        'Formulas are replaced !
         '---------stiffener flange-------
         _Iy = _tf ^ 3 * _bf / 12                       'Moment of Inertia
         _Iy += _bf * _tf * Abs(_dw - _z0 + _tf / 2) ^ 2 'verplaatsing 
@@ -141,12 +161,6 @@ Public Class Form1
         '---------stiffener web -------
         _Iy += _dw ^ 3 * _tw / 12                    'Moment of Inertia
         _Iy += _dw * _tw * Abs(_z0 - _dw / 2) ^ 2    'verplaatsing
-
-        TextBox119.Text = Round(_iy1, 2).ToString
-        TextBox120.Text = Round(_iy2, 2).ToString
-        TextBox121.Text = Round(_iy3, 2).ToString
-        TextBox122.Text = Round(_iy4, 0).ToString
-        TextBox123.Text = Round(_iy5, 0).ToString
 
         '---------stiffener flange-------
         _Iz = _bf ^ 3 * _tf / 12                       'Moment of Inertia
@@ -156,15 +170,31 @@ Public Class Form1
         _Iz += _tw ^ 3 * _dw / 12     'Moment of Inertia
         _Iz += _dw * _tw * _y0 ^ 2   'verplaatsing
 
-        TextBox72.Text = Round(_As, 2).ToString
+        '---------Plate Moment of inertia -------
+        Iy1 = _t * _S ^ 3 / 12   'Y axis trough centroid
+        Iz1 = _S * _t ^ 3 / 12   'Z axis trough centroid
+
+        TextBox130.Text = Round(_Aflange, 2).ToString
+        TextBox126.Text = Round(_Aweb, 2).ToString
+        TextBox72.Text = Round(_Aplate, 2).ToString
+        TextBox127.Text = Round(_A, 2).ToString
+
+        TextBox124.Text = Round(Iy1, 0).ToString
+        TextBox125.Text = Round(Iz1, 1).ToString
+
+
+
         TextBox73.Text = Round(_y0, 2).ToString
         TextBox74.Text = Round(_z0, 2).ToString
 
-        TextBox75.Text = Round(_Iy, 0).ToString
-        TextBox65.Text = Round(_Iy, 0).ToString
+        TextBox129.Text = Round(_y1, 2).ToString
+        TextBox128.Text = Round(_z1, 2).ToString
 
-        TextBox76.Text = Round(_Iz, 0).ToString
-        TextBox66.Text = Round(_Iz, 0).ToString
+        TextBox75.Text = Round(_Iy, 1).ToString
+        TextBox65.Text = Round(_Iy, 1).ToString
+
+        TextBox76.Text = Round(_Iz, 1).ToString
+        TextBox66.Text = Round(_Iz, 1).ToString
 
     End Sub
     Private Sub Read_loads()
@@ -210,6 +240,7 @@ Public Class Form1
         _v = NumericUpDown12.Value      'Poissons
         _Pr = NumericUpDown16.Value     'Proportional lineair elastic limit of structure
         _η = CDbl(IIf(RadioButton4.Checked, 0.6, 0.8))    'See page 2
+        TextBox119.Text = Round(_σ0 / 100, 0).ToString
     End Sub
     'See page 28 of the ABS guide for Buckling
     Private Sub Calc_chapter3_1_1()
@@ -634,7 +665,7 @@ Public Class Form1
         Calc_sequence()
     End Sub
 
-    Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click, NumericUpDown18.ValueChanged, NumericUpDown17.ValueChanged, NumericUpDown15.ValueChanged, NumericUpDown11.ValueChanged, NumericUpDown10.ValueChanged, RadioButton9.CheckedChanged, RadioButton11.CheckedChanged, RadioButton10.CheckedChanged
+    Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
         Calc_sequence()
     End Sub
 
@@ -650,6 +681,9 @@ Public Class Form1
     End Sub
 
     Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click, TabPage3.Enter
+        Calc_sequence()
+    End Sub
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click, RadioButton9.CheckedChanged, RadioButton11.CheckedChanged, RadioButton10.CheckedChanged, NumericUpDown18.ValueChanged, NumericUpDown17.ValueChanged, NumericUpDown15.ValueChanged, NumericUpDown11.ValueChanged, NumericUpDown10.ValueChanged
         Calc_sequence()
     End Sub
 
@@ -868,8 +902,9 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub Check_for_problems()
 
+
+    Private Sub Check_for_problems()
         '-------- find all numeric, combobox, checkbox and radiobutton controls -----------------
         FindControlRecursive(all_textbox, Me, GetType(TextBox))   'Find the control
         all_textbox = all_textbox.OrderBy(Function(x) x.Name).ToList()      'Alphabetical order
@@ -882,7 +917,6 @@ Public Class Form1
                 Button9.Visible = CBool(vbFalse)
             End If
         Next
-
     End Sub
 
     '----------- Find all controls on form1------
