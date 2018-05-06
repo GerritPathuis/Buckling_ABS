@@ -35,3 +35,4 @@ C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Interop.Office.dll
 C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.vbproj.ResolveComReference.cache
 C:\Repos\VTK-Buckling_ABS\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Interop.Office.dll
 C:\Repos\VTK-Buckling_ABS\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.vbproj.ResolveComReference.cache
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.vbproj.CoreCompileInputs.cache

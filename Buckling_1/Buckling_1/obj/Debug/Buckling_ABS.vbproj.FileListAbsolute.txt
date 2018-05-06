@@ -1,0 +1,14 @@
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\bin\Debug\Buckling_1.exe.config
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\bin\Debug\Buckling_1.exe
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\bin\Debug\Buckling_1.pdb
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\bin\Debug\Buckling_1.xml
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_ABS.vbprojResolveAssemblyReference.cache
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Interop.Office.dll
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_ABS.vbproj.ResolveComReference.cache
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.Form1.resources
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.Resources.resources
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_ABS.vbproj.GenerateResource.cache
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_ABS.vbproj.CoreCompileInputs.cache
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.exe
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.xml
+C:\Repositories\Buckling_ABS\Buckling_1\Buckling_1\obj\Debug\Buckling_1.pdb
