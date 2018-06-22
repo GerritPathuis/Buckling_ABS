@@ -299,8 +299,8 @@ Public Class Form1
 
         Select Case True
             Case RadioButton1.Checked
-                C1 = 1.1
-                C2 = 1.2
+                C1 = 1.1                'page 30, ABS Guide
+                C2 = 1.2                'page 30, ABS Guide
             Case RadioButton2.Checked
                 C1 = 1.0
                 C2 = 1.1
@@ -308,8 +308,11 @@ Public Class Form1
                 C1 = 1.0
                 C2 = 1.0
         End Select
+        Label361.Text = "C1= " & C1.ToString("0.0")
+        Label362.Text = "C2= " & C2.ToString("0.0")
 
-        '==============Loading applied along long edge========================
+        '============== X DIRECTION=========================================
+        '==============Loading applied along long edge =====================
         If (_kx < 1 / 3) Then
             If (_α >= 1 And _α <= 2) Then
                 Ksx_long = 24 / _α ^ 2
@@ -914,6 +917,18 @@ Public Class Form1
         Catch ex As Exception
             'MessageBox.Show(ex.Message & "Problem storing file to" & dirpath_Rap)  ' Show the exception's message.
         End Try
+    End Sub
+
+    Private Sub RadioButton1_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton1.CheckedChanged
+        Calc_chapter3_1_2()
+    End Sub
+
+    Private Sub RadioButton2_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton2.CheckedChanged
+        Calc_chapter3_1_2()
+    End Sub
+
+    Private Sub RadioButton3_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton3.CheckedChanged
+        Calc_chapter3_1_2()
     End Sub
 
     Private Sub Check_for_problems()
